@@ -93,6 +93,9 @@ Mode constraints:
 <output>
 
 1. Add or update only your scoped block in `SubAgents-context/subagent-context-{task-name}.instructions.md`. The context file is read by all subagents, so record only a compact audit summary: no full integration matrix, no lengthy debt lists, no repeating all evidence. Keep the full audit in the final response.
+
+  After completing analysis and before writing your context file block, check the context file’s `Required Documentation` section. If a relevant specification or architecture document was discovered during audit that is NOT already listed, append it with attribution: `<!-- added by: integration-architect-auditor, YYYY-MM-DD -->`. Reference the canonical rule from `SubAgents-context/README.md`.
+
   Use the format:
 
 ```markdown

@@ -15,6 +15,16 @@ Brief rules for using this subfolder to preserve context between subagent invoca
 - Usage in workflow: before launching subagents, attach the path to the corresponding file and reference it in `runSubagent` parameters.
 - The full user request is stored in `SubAgents-tasks/task-{task-name}.instructions.md` (sections `Source`/`Goal`), not in the context file.
 - `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and may only add their own scoped block in append-only format with explicit role indication (append-only: no deletion of others' active blocks); pipeline participants may only edit their own block.
+
+### Required Documentation — Shared Section Exception
+
+- `Required Documentation` is a **shared section** — an exception to the block-scoping rule. Multiple permitted agents may append entries to this single section.
+- This exception applies ONLY to `Required Documentation` and does NOT establish a precedent for other shared sections.
+- Permitted editors: `task-creator` (initial population), `analyze-project`, `product-qa-scenario-analyst`, `integration-architect-auditor`, `web-searcher`, `document-merger`.
+- Entry format: `- [path](path) — description <!-- added by: agent-name, YYYY-MM-DD -->`
+- Dedup rule: before appending, check if the relative path already exists in the section; if it does, skip the entry.
+- Backward compatibility: if a context file does not contain a `Required Documentation` section, agents skip silently and do not fail.
+
 - The final subagent response (summary returned to the Project Lead context after invocation): no more than 100 lines. Each agent may set a stricter limit in its `<constraints>`.
 - Recommended block order after coding stage: implementation → `code-reviewer` (with Python-specific findings within the same block for Python scope) → `security-reviewer` for security-sensitive scope → mandatory final audits.
 - `build-error-resolver` records only root cause, minimal fix, and verification command; `refactor-cleaner` records only the report and risk assessment without hidden cleanup.
@@ -27,6 +37,11 @@ applyTo: '**'
 name: '{Task name. Specified by User or Project Lead}'
 description: '{Brief task summary and current scope boundaries. Full task statement source: SubAgents-tasks/task-{task-name}.instructions.md}'
 ---
+
+## Required Documentation
+<!-- Shared section. Permitted editors append entries with attribution. Dedup: check relative path before appending. -->
+
+- [path/to/doc.md](path/to/doc.md) — description <!-- added by: agent-name, YYYY-MM-DD -->
 
 ## Application Research Stage
 <!--Your data below in append-only format. Explicit editing by SubAgents and Agents is allowed. -->

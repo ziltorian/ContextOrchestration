@@ -13,6 +13,7 @@ docs/
 ├── *.md                    # Core documentation (concept, architecture, stack)
 ├── specification/          # Detailed feature specifications and addenda
 ├── api/                    # API documentation and specifications
+├── web/                    # Web research artifacts (web-searcher)
 └── architecture/           # Architectural decisions and diagrams
 ```
 
@@ -34,6 +35,10 @@ docs/
 ### API
 
 - `docs/api/endpoints.md` — REST API documentation with request/response formats and error handling
+
+### Web Research Artifacts
+
+- `docs/web/` — Research artifacts created by `web-searcher` agent. Contains external technology findings, best-practices analysis, and reference materials.
 
 ## How to Use
 

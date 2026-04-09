@@ -68,6 +68,7 @@ If `SubAgents-tasks/task-{task-name}.instructions.md` is missing, launching plan
 - `code-reviewer`, `security-reviewer`, `refactor-cleaner`: review-only/report-only participants; they do not modify production code.
 - For Python scope, `code-reviewer` combines general review and Python-specific pass.
 - `build-error-resolver`: allowed only for minimal fix of a blocking error within the already approved scope; does not modify tests to match implementation and does not expand the task.
+- `Required Documentation` section in task file: `task-creator` writes during creation; `web-searcher` may append only `docs/web/` artifact references and only before PL approval; immutable after PL approval (same rule as the full task file).
 - Documentation and completion artifacts: produced at implementation and closure stages by specialized agents.
 
 ## Task File Template `task-{task-name}.instructions.md`
@@ -103,6 +104,11 @@ description: '{Brief contextual summary of the task and current scope boundaries
 
 ## Constraints
 - {Constraints: security, tests, format, architectural restrictions}
+
+## Required Documentation
+<!-- Populated by task-creator during intake. web-searcher may append docs/web/ references before PL approval. Immutable after PL approval (same as the rest of the task file). -->
+
+- [path/to/doc.md](path/to/doc.md) — description <!-- added by: agent-name, YYYY-MM-DD -->
 
 ## Additional Subagents
 - {List of additional subagents for the task. Format: agent_name - role/task}

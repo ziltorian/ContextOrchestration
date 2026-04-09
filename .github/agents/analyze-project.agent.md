@@ -70,6 +70,8 @@ Final response:
 
 When updating `SubAgents-context/subagent-context-{task-name}.instructions.md`, add only a compact scoped block. The context file is read by all subagents, so do not overload it with the full report, lengthy tables, raw logs, or large quotes. Keep the full report in the final response.
 
+After completing analysis and before writing your context file block, check the context file’s `Required Documentation` section. If a relevant specification or architecture document was discovered during analysis that is NOT already listed, append it with attribution: `<!-- added by: analyze-project, YYYY-MM-DD -->`. Reference the canonical rule from `SubAgents-context/README.md`.
+
 Use the following block format:
 
 ```markdown

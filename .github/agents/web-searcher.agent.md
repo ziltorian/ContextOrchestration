@@ -153,6 +153,10 @@ Final response:
 - Explicit list of created and modified files.
 - If the request specifies a task-name or context file, separately indicate the applicability of findings to the project.
 
+After creating a research artifact in `docs/web/`, append a reference to the context file's `Required Documentation` section using the format: `- [docs/web/artifact-name.md](docs/web/artifact-name.md) — {topic summary} <!-- added by: web-searcher, YYYY-MM-DD -->`. Before appending, check if the path already exists.
+
+Additionally, if the task file has NOT yet been approved by Project Lead (i.e., the pipeline is still in the intake or research stage), also append the reference to the task file's `Required Documentation` section.
+
 If updating `SubAgents-context/subagent-context-{task-name}.instructions.md`, add only a brief scoped block. The context file is read by all subagents, so do not copy the full research report, long source lists, large quotes, or detailed narrative sections into it. The detailed report and sources remain only in the final response.
 
 Use the format:

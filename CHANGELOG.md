@@ -12,6 +12,13 @@ versioning follows the internal development plan [Master Plan](.github/implement
 
 ## [0.2.0] - 2026-04-09
 
+### 2026-04-09 - Documentation Awareness Pipeline
+
+- Scope: Agent pipeline, documentation propagation
+- Summary: Added `Required Documentation` section to task and context file templates. 8 agents now automatically propagate documentation references through the pipeline: task-creator populates at intake, research agents (analyze-project, product-qa-scenario-analyst, integration-architect-auditor) append discovered specs, web-searcher tracks docs/web/ artifacts, document-merger supports multi-stage documentation creation from scratch. Project Lead workflow updated with Documentation Awareness section.
+- Affected files: SubAgents-tasks/README.md, SubAgents-context/README.md, task-creator.agent.md, analyze-project.agent.md, product-qa-scenario-analyst.agent.md, integration-architect-auditor.agent.md, web-searcher.agent.md, document-merger.agent.md, project-lead-workflow.instructions.md, implementation-planning.agent.md, docs/architecture/overview.md, Project_Docs_Context.instructions.md
+- Verification: Code review PASS (3 issues fixed), QA audit READY (4/4 scenarios), Architecture audit READY (42/42 integration matrix)
+
 ### 2026-04-09 - UI/UX Design Toolkit
 
 - Scope: UI/UX design toolkit

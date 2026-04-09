@@ -205,7 +205,7 @@ Use direct access when:
 | **build-error-resolver** | Diagnoses and fixes build, test, and lint errors |
 | **code-reviewer** | Code review for quality, security, and maintainability |
 | **compliance-gap-auditor** | Gap analysis between implementation and specifications |
-| **document-merger** | Context-aware merging of project documents |
+| **document-merger** | Merges or creates stable project documentation with code-backed verification and targeted research/review orchestration |
 | **implementation-completion-reporter** | Produces closure artifacts: reports, changelog, task status |
 | **implementation-planning** | Creates implementation plans with phases, risks, and testing |
 | **instructions-creator** | Creates .instructions.md files for GitHub Copilot |

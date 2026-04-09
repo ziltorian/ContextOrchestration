@@ -105,8 +105,9 @@ Return findings + sources + applicability to the project, no code.
   3) Read target instructions `.github/implementations/*.instructions.md` if available.
   4) Read the list of available subagents `.github/agents`.
   5) Decide whether subagents are needed for intake. If yes — first `analyze-project`, then only necessary additional subagents per the rules in the `subagent-orchestration` block.
-  6) Create `SubAgents-tasks/task-{task-name}.instructions.md` with sections Source, Goal, Scope, Done Criteria, Non-goals.
-  7) Create `SubAgents-context/subagent-context-{task-name}.instructions.md` with a basic stage-log without duplicating the full user request.
+  6) Scan the `docs/` directory tree. For each document, evaluate relevance to the task scope by matching task keywords against document filenames, section headings, and the `docs/README.md` structure map. Select relevant documents and populate the `Required Documentation` section in both the task file and context file during creation.
+  7) Create `SubAgents-tasks/task-{task-name}.instructions.md` with sections Source, Goal, Scope, Done Criteria, Non-goals.
+  8) Create `SubAgents-context/subagent-context-{task-name}.instructions.md` with a basic stage-log without duplicating the full user request.
 - Output: paths to created files and a brief intake summary.
 
 ### Mode B — Quick Todo Update
@@ -140,6 +141,7 @@ Return findings + sources + applicability to the project, no code.
 - Do not turn references to orchestration prompts, workflow instructions, and current intake agent actions into task requirements.
 - Do not list in task/context the fact of reading `README`, `project-lead-workflow.instructions.md`, or other meta-instructions; instead record only conclusions that affect the task boundaries.
 - Formulate `Scope`, `Done Criteria`, and `Constraints` as a neutral task contract, not as a runbook for Project Lead or another agent.
+- When creating task and context files, populate the `Required Documentation` section by scanning `docs/` and selecting documents relevant to the task scope. Reference the entry format from `SubAgents-tasks/README.md`.
 - Do not edit production code.
 - Do not modify existing `SubAgents-tasks/task-{task-name}.instructions.md` after its approval by Project Lead.
 - In the final response always indicate: mode, list of files read, which subagents were invoked and why, list of created/updated files, status READY/NOT READY.

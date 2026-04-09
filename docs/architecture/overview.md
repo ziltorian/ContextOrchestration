@@ -76,6 +76,7 @@ Modes:
 **Responsibility:** Define agent roles, tools, workflows, and constraints.
 **Format:** `.agent.md` with YAML frontmatter + XML body sections.
 **Count:** 20 agents (1 super-orchestrator, 1 orchestrator, 18 specialists).
+**Nested orchestration:** allowed only for `task-creator`, `implementation-planning`, `integration-architect-auditor`, and `document-merger`, each with an explicit `agents` allowlist.
 
 ### Instructions (`.github/instructions/`)
 
@@ -109,6 +110,7 @@ Modes:
 | `SubAgents-context/*.instructions.md` | Stage-log between subagent invocations | Pipeline participants (append-only) |
 | `SubAgents-tasks/task-*.instructions.md` | Immutable task definitions (Source/Goal) | task-creator |
 | `project-todo.instructions.md` | Global task queue visible to all agents | User, task-creator (mode B) |
+| `Required Documentation` section (in task + context files) | Curated list of documentation relevant to the task; populated at intake, extended by research agents | task-creator (initial), research agents + web-searcher (append) |
 | File Registry (in journal) | Scope ownership: file → PL mapping | Program Director |
 
 ## Key Decisions

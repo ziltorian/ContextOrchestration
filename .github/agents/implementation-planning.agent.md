@@ -88,9 +88,10 @@ Research comprehensively using read-only tools and the approved subagent sequenc
 4. Run `product-qa-scenario-analyst` first when scenario framing, user impact, or expected-path analysis is still incomplete.
 5. Run `analyze-project` to map affected files, classes, methods, and integration boundaries.
 6. Run `web-searcher` only if project docs and code do not answer an external-technology question.
-7. Use local read/search tools to verify subagent claims against the codebase.
-8. For each affected component: record exact file paths, class/method names, line numbers, and likely regression points.
-9. Stop research at 80% confidence. Articulate root causes and proposed changes before writing the plan.
+7. Check if the task scope would benefit from a documentation creation parallel track: if the affected module lacks stable documentation in `docs/`, note it in the plan as an optional parallel phase referencing `document-merger` multi-stage documentation creation workflow.
+8. Use local read/search tools to verify subagent claims against the codebase.
+9. For each affected component: record exact file paths, class/method names, line numbers, and likely regression points.
+10. Stop research at 80% confidence. Articulate root causes and proposed changes before writing the plan.
 
 </plan_research>
 

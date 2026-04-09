@@ -48,6 +48,9 @@ You are a multidisciplinary project auditor: QA analyst, project analyst, concep
 <output>
 
 1. Add or update only your scoped block in `SubAgents-context/subagent-context-{task-name}.instructions.md`. The context file is read by all subagents, so record only a brief stage-log for the current audit: no full scenario table, no lengthy quotes, no repeating the entire final report. Keep the full detailed audit in the final response.
+
+  After completing analysis and before writing your context file block, check the context file’s `Required Documentation` section. If a relevant specification or architecture document was discovered during analysis that is NOT already listed, append it with attribution: `<!-- added by: product-qa-scenario-analyst, YYYY-MM-DD -->`.Reference the canonical rule from `SubAgents-context/README.md`.
+
   Use the format:
 
 ```markdown

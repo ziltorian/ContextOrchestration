@@ -49,7 +49,7 @@ description: "Mandatory subagent coordination workflow with READY/NOT READY stat
 
 ### 4. Closure and Documentation
 - `implementation-completion-reporter`: completion report, templated CHANGELOG.md update, marking of provably completed tasks and controlled cleanup of the context file.
-- `document-merger` / `instructions-creator` / `prompt-creator` / `skill-creator`: document and instruction synchronization.
+- `document-merger` / `instructions-creator` / `prompt-creator` / `skill-creator`: document and instruction synchronization. `document-merger` also supports multi-stage documentation creation from scratch.
 
 ## Artifacts And Ownership
 
@@ -134,7 +134,7 @@ Note: post-draft architect refinement is no longer launched manually by Project 
 
 ## Global Constraints
 
-- Subagents do not launch their own subagents, with the exception of `task-creator`, `implementation-planning`, and `integration-architect-auditor`, which have a permitted list of nested subagents in the `agents` field.
+- Subagents do not launch their own subagents, with the exception of `task-creator`, `implementation-planning`, `integration-architect-auditor`, and `document-merger`, which have a permitted list of nested subagents in the `agents` field.
 - **Nested orchestrator exception**: Project Lead launched by Program Director retains full subagent orchestration privileges (may call code-reviewer, implementation-planning, etc.) despite being itself a subagent of Program Director.
 - Any coding task is formulated atomically: module/file/function/boundaries.
 - Broad refactoring outside the agreed scope is prohibited.
@@ -142,6 +142,21 @@ Note: post-draft architect refinement is no longer launched manually by Project 
 - Context must be explicitly passed between subagents via `SubAgents-context/subagent-context-{task-name}.instructions.md`.
 - Infinite fix cycles must be avoided, which can arise from untimely documentation updates: a subagent may create a report based on outdated documentation.
 - `refactor-cleaner` is used only by explicit request for tech debt or cleanup-wave and must not substitute the implementation of an active task.
+
+## Documentation Awareness
+
+### Required Documentation Propagation
+
+- Before planning, verify that the task file and context file contain a `Required Documentation` section.
+- When delegating to subagents, remind them to check the `Required Documentation` section in the context file for relevant specifications.
+- Research agents may append newly discovered documentation references to the context file's `Required Documentation` section during their analysis.
+
+### Documentation Creation (Optional Parallel Track)
+
+- When a task affects a module without stable documentation in `docs/`, PL may invoke `document-merger` in its multi-stage documentation creation mode as a parallel track.
+- Documentation creation must NOT block the main implementation pipeline.
+- Entry criteria: target module has no existing stable docs, or specification template is unfilled.
+- PL controls stage transitions — each stage requires explicit PL decision to proceed.
 
 ## Parallel Mode Conventions
 
