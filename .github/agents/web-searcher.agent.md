@@ -2,7 +2,7 @@
 name: 'web-searcher'
 description: 'Performs in-depth research and comprehensive information retrieval on specified topics.'
 argument-hint: 'Specify the technology topic and result format: findings + sources + applicability to the project (no test execution)'
-tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages, web/fetch, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/configurePythonEnvironment]
+tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search, web/fetch, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/configurePythonEnvironment]
 ---
 <role>
 You are a research agent specializing in deep analysis and comprehensive information retrieval on specified topics.

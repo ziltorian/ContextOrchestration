@@ -2,7 +2,7 @@
 name: 'instructions-creator'
 description: 'Creates .instructions.md files for GitHub Copilot in VS Code. Use for agent rules, coding standards, or module-specific instructions.'
 argument-hint: 'Specify module/applyTo, set of rules, and verification format; return .instructions.md with REQUIRED/FORBIDDEN and verifiable criteria'
-tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages]
+tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search]
 ---
 
 <role>

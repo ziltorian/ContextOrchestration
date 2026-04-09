@@ -20,7 +20,7 @@ description: "Mandatory subagent coordination workflow with READY/NOT READY stat
 - If QA and Architect disagree, make a decision based on the authoritative source (task + specifications + code), apply one agreed-upon fix, re-run both audits.
 
 ### FORBIDDEN
-- Starting planning/implementation without `SubAgents-tasks/task-{task-name}.instructions.md` and `SubAgents-context/subagent-context-{task-name}.instructions.md`.
+- Starting planning/implementation without `SubAgents-tasks/task-{task-name}.instructions.md` and `SubAgents-context/subagent-context-{task-name}.instructions.md`. Exception: when launched by Program Director in parallel mode, the PD handoff prompt itself serves as the task definition if no dedicated task file exists for the assigned scope.
 - Closing a task without READY from both mandatory checkpoint audits.
 - Running the same set of research subagents consecutively without changing the scope.
 - Running tests in parallel by multiple subagents.
@@ -135,9 +135,64 @@ Note: post-draft architect refinement is no longer launched manually by Project 
 ## Global Constraints
 
 - Subagents do not launch their own subagents, with the exception of `task-creator`, `implementation-planning`, and `integration-architect-auditor`, which have a permitted list of nested subagents in the `agents` field.
+- **Nested orchestrator exception**: Project Lead launched by Program Director retains full subagent orchestration privileges (may call code-reviewer, implementation-planning, etc.) despite being itself a subagent of Program Director.
 - Any coding task is formulated atomically: module/file/function/boundaries.
 - Broad refactoring outside the agreed scope is prohibited.
 - Subagents have limited context and do not know the context of previous invocations.
 - Context must be explicitly passed between subagents via `SubAgents-context/subagent-context-{task-name}.instructions.md`.
 - Infinite fix cycles must be avoided, which can arise from untimely documentation updates: a subagent may create a report based on outdated documentation.
 - `refactor-cleaner` is used only by explicit request for tech debt or cleanup-wave and must not substitute the implementation of an active task.
+
+## Parallel Mode Conventions
+
+These conventions apply when **Program Director** launches multiple Project Lead agents to work in parallel within the same project.
+
+### Identity and Naming
+
+- Each parallel Project Lead receives a unique name from Program Director (e.g., PL-Alpha, PL-Beta).
+- The PL MUST use its assigned name in all journal entries and context file updates.
+- If no name is assigned, the PL is running in single-PL mode — parallel conventions do not apply.
+
+### Scope Boundaries
+
+#### MUST
+- Respect the assigned scope: only edit files/directories listed in the File Registry under your name.
+- Before editing any file, verify it appears in your scope in the File Registry section of `PROJECT_LEAD_JOURNAL.md`.
+- If you need a file outside your scope, record it as a blocker in your Progress Ledger section — do NOT edit it.
+
+#### FORBIDDEN
+- Editing files outside your assigned scope.
+- Modifying the Task Ledger or File Registry sections of the journal (owned by Program Director).
+- Editing other PLs' sections in the Progress Ledger.
+- Running tests in parallel with other Project Leads (test execution conflicts).
+- Creating new task files (`task-*.instructions.md`) without scope authorization — use the existing project-level task file.
+
+### Journal Coordination
+
+- Write ONLY to your own named section in the Progress Ledger of `PROJECT_LEAD_JOURNAL.md`.
+- Read the full journal (Task Ledger, File Registry, other PLs' sections) for awareness.
+- Use all mandatory fields in every journal entry — no freeform prose.
+- Append new entries; do not overwrite previous entries within the same wave.
+
+### Context Recovery Protocol
+
+When launched by Program Director with clean context:
+
+1. Read `PROJECT_LEAD_JOURNAL.md` in full.
+2. Find the Task Ledger → understand project goal and overall plan.
+3. Find the File Registry → identify your assigned scope.
+4. Find the Context Recovery section → understand current project state.
+5. Find your named section in Progress Ledger → reconstruct your prior work (if any from previous waves).
+6. Accept that context recovery may be incomplete — proceed with available information.
+7. If critical context is missing, log it as a blocker rather than guessing.
+
+### Scope Conflict Resolution
+
+- If two PLs need the same file, the one NOT listed in the File Registry yields.
+- If neither is listed (registry error), both log it as a blocker for Program Director to resolve in the next wave.
+- Shared infrastructure files (README, CHANGELOG, project-todo) are handled by the designated PL or by Program Director between waves.
+
+### Partial Completion
+
+- If you complete your scope before other PLs finish, write a READY status to your journal section and terminate.
+- If you cannot complete your scope, write a NOT READY or BLOCKED status with details for Program Director to re-assign in the next wave.

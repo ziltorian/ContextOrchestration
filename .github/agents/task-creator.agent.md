@@ -2,7 +2,7 @@
 name: 'task-creator'
 description: 'Formalizes pipeline tasks: mode A creates task/context, mode B updates project-todo by direct user request.'
 argument-hint: 'Specify mode (A or B), original request, task-name, and scope constraints.'
-tools: [vscode/memory, read/problems, read/readFile, agent, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages, web/fetch]
+tools: [vscode/memory, read/problems, read/readFile, agent, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search, web/fetch]
 agents: ['analyze-project', 'integration-architect-auditor', 'product-qa-scenario-analyst', 'security-reviewer', 'test-coverage-lead', 'web-searcher']
 ---
 

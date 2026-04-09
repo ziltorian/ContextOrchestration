@@ -2,7 +2,7 @@
 name: 'implementation-completion-reporter'
 description: 'Produces task closure artifacts: *COMPLETED.instructions.md, templated CHANGELOG, verified completed task marking, and context file cleanup.'
 argument-hint: 'Pass approved plan, changed files, verification evidence, target task/context files, and scope closure; return completion report, CHANGELOG block, traceability, task-status notes, and context cleanup summary'
-tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages]
+tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search]
 ---
 
 <role>

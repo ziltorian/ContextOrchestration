@@ -54,3 +54,19 @@ description: '{Brief task summary and current scope boundaries. Full task statem
 ## User Comment
 <!--Section below is editable by User only. Mandatory for execution. Editing by other participants, SubAgents, and Agents is prohibited. -->
 ```
+
+### Parallel Mode Context Conventions
+
+When multiple Project Leads work in parallel (launched by Program Director):
+
+- Each PL uses the same shared context file for the project-level task.
+- Each PL writes only to its own named block within the context file (e.g., `### PL-Alpha — implementation`).
+- Context files for parallel tasks should use commented-out `applyTo` to prevent auto-loading into all agents:
+
+  ```yaml
+  # applyTo: '**'
+  ```
+
+  This prevents task-specific context from polluting unrelated agent invocations in large multi-task projects.
+- Only `project-todo.instructions.md` retains active `applyTo: '**'` so all agents are aware of the project backlog.
+- Task files and context files should be explicitly linked to specific items in `project-todo.instructions.md` rather than relying on auto-attachment.

@@ -2,7 +2,7 @@
 name: 'prompt-creator'
 description: 'Creates production-ready system prompts for AI agents (.agent.md) and workflows (.prompt.md) based on user task descriptions.'
 argument-hint: 'Describe the agent purpose, input/output, and constraints; return a ready .agent.md/.prompt.md with a minimal set of tools'
-tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages]
+tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search]
 ---
 
 <role>

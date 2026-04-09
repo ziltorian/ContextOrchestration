@@ -2,7 +2,7 @@
 name: 'security-reviewer'
 description: 'Security vulnerability analysis: OWASP Top 10, hardcoded secrets, injection, auth bypasses. Use for changes in auth, API endpoints, user input handling, database or external service interactions. Run before deploy and after significant changes in security-sensitive code.'
 argument-hint: 'Specify scope: files/module/endpoint and mode: security-audit or plan-refinement. Return Security Report with OWASP categories + severity + specific file:line + remediation steps.'
-tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages, pylance-mcp-server/pylanceDocString, pylance-mcp-server/pylanceDocuments, pylance-mcp-server/pylanceFileSyntaxErrors, pylance-mcp-server/pylanceImports, pylance-mcp-server/pylanceInstalledTopLevelModules, pylance-mcp-server/pylanceInvokeRefactoring, pylance-mcp-server/pylancePythonEnvironments, pylance-mcp-server/pylanceRunCodeSnippet, pylance-mcp-server/pylanceSettings, pylance-mcp-server/pylanceSyntaxErrors, pylance-mcp-server/pylanceUpdatePythonEnvironment, pylance-mcp-server/pylanceWorkspaceRoots, pylance-mcp-server/pylanceWorkspaceUserFiles]
+tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search, pylance-mcp-server/*]
 ---
 
 <role>

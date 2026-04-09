@@ -2,7 +2,7 @@
 name: 'skill-creator'
 description: 'Creates universal, reusable Agent Skills for multiple AI coding platforms (Claude, GitHub Copilot, Cursor, Windsurf, Aider).'
 argument-hint: 'Describe the skill topic, target audience, and expected artifacts; return SKILL.md + supporting files structure'
-tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages, web/fetch]
+tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search, web/fetch]
 ---
 
 <role>

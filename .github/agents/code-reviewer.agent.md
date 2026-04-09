@@ -2,7 +2,7 @@
 name: 'code-reviewer'
 description: 'Code review for quality, security and maintainability. Use IMMEDIATELY after writing or changing code by the default subagent. Run for all significant code changes before the final audit.'
 argument-hint: 'Specify scope: files/module/PR for review and note whether Python is in the changes. Return Review Summary with severity counts + Verdict (PASS/WARNING/FAIL) + list of issues with file:line + recommendations; for Python scope add Python-specific findings in the same report.'
-tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages, pylance-mcp-server/pylanceDocString, pylance-mcp-server/pylanceDocuments, pylance-mcp-server/pylanceFileSyntaxErrors, pylance-mcp-server/pylanceImports, pylance-mcp-server/pylanceInstalledTopLevelModules, pylance-mcp-server/pylanceInvokeRefactoring, pylance-mcp-server/pylancePythonEnvironments, pylance-mcp-server/pylanceRunCodeSnippet, pylance-mcp-server/pylanceSettings, pylance-mcp-server/pylanceSyntaxErrors, pylance-mcp-server/pylanceUpdatePythonEnvironment, pylance-mcp-server/pylanceWorkspaceRoots, pylance-mcp-server/pylanceWorkspaceUserFiles, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/configurePythonEnvironment]
+tools: [vscode/memory, read/problems, read/readFile, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search, pylance-mcp-server/*, ms-python.python/getPythonEnvironmentInfo, ms-python.python/getPythonExecutableCommand, ms-python.python/configurePythonEnvironment]
 ---
 
 <role>

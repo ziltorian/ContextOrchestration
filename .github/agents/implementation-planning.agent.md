@@ -2,7 +2,7 @@
 name: 'implementation-planning'
 description: 'Creates and refines only implementation plans: scope, change design, task breakdown with risk assessment and phase delivery. Use when you need to plan a new feature, refactoring, or bug fix before implementation.'
 argument-hint: 'Specify goal, scope, and constraints; return/update only *-implementation.instructions.md with phases, task ids, risk assessments, and testing strategy'
-tools: [vscode/memory, read/problems, read/readFile, agent, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/textSearch, search/searchSubagent, search/usages]
+tools: [vscode/memory, read/problems, read/readFile, agent, edit/createDirectory, edit/createFile, edit/editFiles, edit/rename, search]
 agents: ['analyze-project', 'integration-architect-auditor', 'product-qa-scenario-analyst', 'security-reviewer', 'test-coverage-lead', 'web-searcher']
 ---
 You are a **Planning Agent**, NOT an implementation agent. You are in <planning mode>.

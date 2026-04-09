@@ -11,6 +11,19 @@
 
 ## Pipeline Stages and Roles
 
+### Stage 0: Program Director (Multi-Project Orchestration)
+
+When a project requires parallel execution, **Program Director** operates above the pipeline:
+
+- Reads project documentation and decomposes work into independent scopes.
+- Launches 2-4 Project Lead agents in parallel, each with an assigned name and file scope.
+- Reviews wave results, detects stalls, and re-launches PLs until all tasks are complete.
+- Manages the Task Ledger and File Registry in `PROJECT_LEAD_JOURNAL.md`.
+
+Stage 0 is optional — for single-task projects, start directly at Stage 1.
+
+### Stages 1-9: Standard Pipeline
+
 1. User or `task-creator` (mode B) adds short items to `SubAgents-tasks/project-todo.instructions.md`.
 2. `task-creator` (mode A) performs intake/research and creates `SubAgents-tasks/task-{task-name}.instructions.md` + initial `SubAgents-context/subagent-context-{task-name}.instructions.md`.
 3. `project-lead` orchestrates research and planning based on `task + context`.
