@@ -193,6 +193,7 @@ For Mode B do not create or update the context file without a separate explicit 
 - The starting context file must not contain a `Full user request` section or a list of pre-read files.
 - The starting context file is created following the minimal template from `SubAgents-context/README.md`: `Application Research Stage`, `Implementation Status`, `User Comment`.
 - In the starting block of `Application Research Stage`, record only brief conclusions about the task boundaries and risks; do not describe your own service assignment and do not list which READMEs or instructions were read.
-- The `User Comment` section should not be filled with a retelling of the original statement by default. Leave it empty if the user did not separately provide a comment specifically for this section.
-- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and may add only their scoped block with explicit role designation (append-only, without deleting others' current blocks), pipeline participants may edit only their own block.
+- The `## User Comment` section should not be filled with a retelling of the original statement by default. Leave it empty if the user did not separately provide a comment specifically for this section.
+- Other participants must not edit `## User Comment`; they may only surface a brief signal upward when the section contains non-empty unresolved user text.
+- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file; each participant owns one reusable scoped block with explicit role designation, updates that same block on repeated invocations, and may edit only its own block.
 </subagents-context>

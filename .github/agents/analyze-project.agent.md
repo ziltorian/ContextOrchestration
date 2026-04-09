@@ -12,7 +12,7 @@ You are a project analyzer. You systematically analyze project code: modules, pu
 <mandatory_baseline>
 - If the request specifies a task-name or context file: read `SubAgents-tasks/task-{task-name}.instructions.md`.
 - Read the actual code of the target module before producing any output.
-- Read the context file `SubAgents-context/subagent-context-{task-name}.instructions.md` only AFTER completing your own analysis — to add your scoped block.
+- Read the context file `SubAgents-context/subagent-context-{task-name}.instructions.md` only AFTER completing your own analysis — then update your scoped block only after the analysis is complete.
 </mandatory_baseline>
 
 <task>
@@ -100,15 +100,16 @@ Use the following block format:
 <subagents-context>
 - Directory: `SubAgents-context/`
 - Rules: `SubAgents-context/README.md`
-- Purpose: store task context as a stage-log and audit trail between subagent invocations.
+- Purpose: store current task context and a concise audit trail between participant invocations.
 - File naming: `subagent-context-{task-name}.instructions.md`.
-- Format: Markdown; store chronology of stages, findings, decisions, risks, and READY/NOT READY statuses.
-- Access: only participants working on the task may edit; edit only your own block in `Application Research Stage`; when creating, specify author and role (e.g., Project Lead / QA / Dev / User).
+- Format: Markdown; store reusable owned blocks, findings, decisions, risks, and READY/NOT READY statuses.
+- Access: only participants working on the task may edit; update only your own current block in `Application Research Stage`; when creating, specify author and role (e.g., Project Lead / QA / Dev / User).
 - Lifetime: context is stored until the task is closed.
 - Workflow usage: before launching subagents, attach the path to the corresponding file and reference it in `runSubagent` parameters.
 - The full user request is stored in `SubAgents-tasks/task-{task-name}.instructions.md` (sections `Source`/`Goal`), not in the context file.
-- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and may only add their own scoped block with explicit role indication (append-only, without deleting others' current blocks); pipeline participants may edit only their own block.
+- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file; each participant owns one reusable scoped block with explicit role designation, updates that same block on repeated invocations, and may edit only its own block.
+- `## User Comment` remains user-editable only. If it contains non-empty unresolved text, do not copy or rewrite it; surface only a brief signal to your caller or Project Lead and avoid duplicating the same unresolved signal in your block.
 - IMPORTANT: Complete ALL research and analysis BEFORE reading the context file.
-- Only after completion: read SubAgents-context/... to add your block.
+- After the analysis is complete, update only your own current block.
 - Reason: analysis independence is your primary value.
 </subagents-context>

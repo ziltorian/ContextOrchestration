@@ -191,7 +191,8 @@ Use this format:
 - Rules: `SubAgents-context/README.md`
 - Purpose: store compact stage-log and decisions between subagent invocations.
 - File naming: `subagent-context-{task-name}.instructions.md`.
-- Access: append only your own scoped block; do not overwrite active blocks from other participants.
+- Access: update only your single owned block; do not overwrite active blocks from other participants.
 - The full task statement remains in `SubAgents-tasks/task-{task-name}.instructions.md`.
+- `## User Comment` remains user-editable only. If it contains non-empty unresolved text, do not copy or rewrite it; surface only a brief signal to your caller or Project Lead and avoid duplicating the same unresolved signal in your block.
 - `Required Documentation` in the context file is a shared-section exception; when applicable, append only the canonical reference line with dedup by relative path.
 </subagents-context>

@@ -14,7 +14,7 @@ Instead of manually coordinating AI assistants, you get a **Project Lead agent**
 - **Project Lead Agent** — Central coordinator that delegates work to specialized subagents and enforces quality gates
 - **20 Agents** — Project orchestration, code review, security audit, implementation planning, UI/UX design, build error resolution, refactoring, QA scenarios, and more
 - **Structured Pipeline** — Predictable flow from task creation through dual-audit verification to completion
-- **Context Preservation** — Persistent context files that maintain state between agent invocations
+- **Context Preservation** — Persistent context files keep one current owned block per participant, surface `## User Comment` signals to Project Lead, and separate active-task hygiene from closure archiving
 - **Task Management** — Formalized task files, implementation plans, and progress tracking
 - **Quality Gates** — Mandatory code review, optional security review, and dual-audit (QA + architecture) before closure
 - **Skills Library** — Reusable knowledge modules for prompt engineering, UI/UX design, implementation planning, open-source licensing, VS Code instructions, and subagent creation
@@ -62,7 +62,7 @@ SubAgents-tasks/             # Task definitions and project backlog
 ├── project-todo.instructions.md   # Task queue
 └── README.md                      # Pipeline rules and conventions
 
-SubAgents-context/           # Persistent context between agent calls
+SubAgents-context/           # Persistent current-state task context between agent calls
 └── README.md                # Context file format and rules
 
 docs/                        # Project documentation (templates)
@@ -80,6 +80,8 @@ CHANGELOG.md                 # Change history
 ## Pipeline Workflow
 
 All orchestration flows through **Project Lead**, which delegates to specialized subagents. Any agent can also be called directly by the user for standalone tasks. For large projects, **Program Director** orchestrates multiple Project Leads in parallel.
+
+Task context files follow a freshness contract defined in `SubAgents-context/README.md` and `SubAgents-tasks/README.md`: each participant updates one current owned block, non-user agents escalate non-empty `## User Comment` signals up to Project Lead without rewriting user text, Project Lead records the reaction and keeps active context compact, and `implementation-completion-reporter` owns the final closure/archive transition.
 
 ### Multi-Agent Orchestration (via Program Director)
 
@@ -276,7 +278,7 @@ Create a new folder in `.github/skills/` with a `SKILL.md` file. Skills provide 
 
 ### Modifying the Pipeline
 
-Edit `SubAgents-tasks/README.md` to adjust pipeline stages, roles, and rules. Update `.github/instructions/project-lead-workflow.instructions.md` for the Project Lead's orchestration logic.
+Edit `SubAgents-context/README.md` and `SubAgents-tasks/README.md` to change the canonical context contract, ownership boundaries, and pipeline rules. Update `.github/instructions/project-lead-workflow.instructions.md` for Project Lead escalation, reaction, and hygiene behavior, and keep `docs/architecture/overview.md` aligned with the public-facing model.
 
 ## Disclaimer
 

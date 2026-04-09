@@ -32,7 +32,7 @@ Stage 0 is optional — for single-task projects, start directly at Stage 1.
 6. After significant code changes, a review-gate is triggered: `code-reviewer`; for Python scope it must include Python-specific findings in the same report.
 7. For security-sensitive scope, `security-reviewer` is added before the final audit.
 8. Control auditors `product-qa-scenario-analyst` and `integration-architect-auditor` issue `READY` or `NOT READY`.
-9. `implementation-completion-reporter` handles closure: completion report, templated `CHANGELOG.md`, verified marking of completed tasks, and context file cleanup.
+9. `implementation-completion-reporter` handles closure: completion report, templated `CHANGELOG.md`, verified marking of completed tasks, and final context archive cleanup after Project Lead hygiene.
 
 Service agents as needed:
 
@@ -62,13 +62,16 @@ If `SubAgents-tasks/task-{task-name}.instructions.md` is missing, launching plan
 
 - `SubAgents-tasks/project-todo.instructions.md`: user can always edit; `task-creator` can edit only in mode B and only by direct user request; `implementation-completion-reporter` can mark truly completed items at closure stage only with confirmed evidence.
 - `SubAgents-tasks/task-{task-name}.instructions.md`: created only by `task-creator` (mode A) or `project-lead` if user directly assigned a task bypassing project-todo.instructions.md. After Project Lead approval, the file is immutable and cannot be edited.
-- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and can only add their own scoped block with explicit role identification (append-only, without deleting others' current blocks), pipeline participants can edit only their own block; exception — `implementation-completion-reporter`, which at closure stage can archive resolved findings and compress outdated blocks without modifying active issues and the user comment section.
+- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and each participant owns one reusable current block with explicit role identification. Stable identity is the role or agent name by default and the assigned PL name in parallel mode; repeated invocations and stage changes update the same owned block. Each owned block preserves a concise immutable status-transition note when prior states or superseded details are compacted. `Required Documentation` remains the sole shared-section exception, and `## User Comment` remains user-editable only.
+- `project-lead`: may perform mid-task context hygiene to compact stale duplicate or superseded context and restore one current owned block per participant, but must preserve active findings, current implementation status, immutable status-transition notes, `Required Documentation`, and the protected `## User Comment` section, and must not remove another participant's current owned block.
+- `implementation-completion-reporter`: owns closure-stage archiving and the final `ARCHIVE` transition. On `READY`, it may compress superseded context into a compact archive summary; on `NOT READY`, it keeps current owned blocks visible and archives only resolved noise. In both cases it preserves active signals, current status, and the protected user comment section.
 - `.github/implementations/{task-name}-implementation.instructions.md`: owner `implementation-planning`; plan refinement via audit subagents is performed when `implementation-planning` invokes its own subagents.
 - Production code: edited only by default subagent.
 - `code-reviewer`, `security-reviewer`, `refactor-cleaner`: review-only/report-only participants; they do not modify production code.
 - For Python scope, `code-reviewer` combines general review and Python-specific pass.
 - `build-error-resolver`: allowed only for minimal fix of a blocking error within the already approved scope; does not modify tests to match implementation and does not expand the task.
 - `Required Documentation` section in task file: `task-creator` writes during creation; `web-searcher` may append only `docs/web/` artifact references and only before PL approval; immutable after PL approval (same rule as the full task file).
+- `## User Comment` handling: non-user participants may only detect and escalate the signal outside the protected section; they never rewrite user-entered text. Deferred signals remain active as `DEFERRED`; only completed Project Lead reactions may be marked `RESOLVED`.
 - Documentation and completion artifacts: produced at implementation and closure stages by specialized agents.
 
 ## Task File Template `task-{task-name}.instructions.md`

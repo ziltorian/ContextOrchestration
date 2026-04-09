@@ -438,11 +438,11 @@ for full details, YAML examples, and the awesome-copilot agent catalog.
 ### Overview
 
 ```
-project-todo.instructions.md  (user-owned, read-only for all agents)
+project-todo.instructions.md  (user-owned backlog; only task-creator mode B and implementation-completion-reporter have limited edit rights)
        │
        ▼  Phase 1 — Task Expansion
-SubAgents-tasks/task-{name}.instructions.md        ← created once by ProjectLead, immutable
-SubAgents-context/subagent-context-{task-name}.instructions.md   ← append-only shared memory
+SubAgents-tasks/task-{task-name}.instructions.md   ← created by task-creator mode A, or by Project Lead on direct assignment; immutable after PL approval
+SubAgents-context/subagent-context-{task-name}.instructions.md   ← current shared context with one owned block per participant
        │
        ▼  Phase 2 — Planning + Architecture
 .github/implementations/{name}-implementation.instructions.md
@@ -451,7 +451,7 @@ SubAgents-context/subagent-context-{task-name}.instructions.md   ← append-only
 Production code
        │
        ▼  Phase 4 — Verification (QA + Architect in parallel)
-Results appended to context file
+Results update the participant-owned blocks in the context file
        │
        ▼  Phase 5 — Completion
 CHANGELOG.md, commit message, docs, completion report

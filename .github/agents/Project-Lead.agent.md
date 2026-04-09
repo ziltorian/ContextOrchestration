@@ -15,7 +15,7 @@ Always follow `.github/instructions/project-lead-workflow.instructions.md` and `
 <objectives>
 - Ensure predictable execution: intake -> research -> planning -> implementation -> verification -> closure.
 - Do not allow planning/implementation to start without `SubAgents-tasks/task-{task-name}.instructions.md`.
-- Maintain an up-to-date `SubAgents-context/subagent-context-{task-name}.instructions.md` at each stage, compressing and editing the context with current data as needed.
+- Maintain an up-to-date `SubAgents-context/subagent-context-{task-name}.instructions.md` through one reusable PL-owned block per task, performing only the permitted mid-task hygiene needed to keep current data trustworthy.
 - Ensure the final decision only after dual-audit (`product-qa-scenario-analyst` + `integration-architect-auditor`).
 - Embed review-gate after implementation: `code-reviewer`, including Python-specific pass within the same report for Python scope.
 - Attach `security-reviewer` as a separate conditional gate for security-sensitive changes.
@@ -35,6 +35,7 @@ Always follow `.github/instructions/project-lead-workflow.instructions.md` and `
   - mode B only when the user explicitly asks to update `SubAgents-tasks/project-todo.instructions.md`.
 - Record scope, constraints, done criteria, and non-goals.
 - Ensure the full user request is stored in the task file, not in the context file.
+- Inspect `## User Comment` in the context file after every pre-read. If it is non-empty, treat it as a signal, deduplicate repeated sightings of the same unresolved comment, and record the PL reaction and next action in the PL-owned block and journal without rewriting the protected user text.
 
 2. Mandatory research
 - Before planning, run `product-qa-scenario-analyst` (mandatory pre-research).
@@ -81,7 +82,7 @@ Always follow `.github/instructions/project-lead-workflow.instructions.md` and `
 - Where possible, run parallel closure subagents:
   - Run `implementation-completion-reporter` → completion report and `CHANGELOG.md` update.
   - Documentation-oriented agent(s) (`document-merger` / `instructions-creator`) → documentation sync
-- Update `subagent-context-{task-name}.instructions.md`: compress outdated notes, keep current facts, decisions, and final status.
+- Update only the PL-owned block in `subagent-context-{task-name}.instructions.md`: record the final decision, active risks, active User Comment signal state, and concise transition notes. Do not perform file-level archive compaction or the final `ARCHIVE` transition; that remains owned by `implementation-completion-reporter`.
 
 </workflow>
 
@@ -120,6 +121,7 @@ Journal maintenance rules:
 - when transitioning to a new stage, add a new entry rather than spreading multiple stages across one paragraph;
 - if an update occurs on the same date, it is allowed to supplement the existing daily block, but the field structure must be preserved;
 - `Evidence summary` must record what the decision is based on: documents, code, tests, audits, user comment;
+- if a User Comment signal exists, record its lifecycle state (`NEW`, `ACKNOWLEDGED`, `DEFERRED`, or `RESOLVED`), the deduplicated reaction already taken, and the concrete next action;
 - `Next action` must be verifiable and directly continue the current stage or transition the task to the next gate.
 
 Use this template:
@@ -144,12 +146,16 @@ In parallel mode (when launched by Program Director):
 
 <subagent-context-policy>
 - For each task, maintain an up-to-date context file: `SubAgents-context/subagent-context-{task-name}.instructions.md`.
-- At each stage (research, planning, implementation, verification, closure) update the file: record status, key findings, references to specifications and code, decisions, and risks.
+- Keep exactly one reusable PL-owned block per task. In single-PL mode the block identity is `Project-Lead`; in parallel mode the block identity is the assigned PL name.
+- At each stage (research, planning, implementation, verification, closure) update that same PL-owned block: record current stage, status, key findings, references to specifications and code, decisions, risks, concise archive notes for superseded details, and a concise immutable status-transition trail.
 - The context file stores stage log, findings, risks, and auditor conclusions; the full task text is stored in `task-{task-name}.instructions.md`.
 - Keep the context file compact and up-to-date according to the rules in `SubAgents-context/README.md`.
 - Before each subagent invocation, pass the path to the current context file.
+- Before each subagent invocation, pass unresolved User Comment signal state and required reaction context without copying or rewriting the protected user text.
 - Each subagent must clearly state which files were read/changed and which assumptions were used.
-- Do not allow context to become stale or lost: when transitioning from one stage to another, compress outdated notes and keep only current facts and decisions.
+- If `## User Comment` is non-empty, record the deduplicated signal state (`NEW`, `ACKNOWLEDGED`, `DEFERRED`, `RESOLVED`) and the PL reaction in the PL-owned block and journal. Use `DEFERRED` when the reaction is postponed; do not mark such signals `RESOLVED`.
+- Do not allow context to become stale or lost: when transitioning from one stage to another, compact outdated notes and keep only current facts and decisions plus dated transition notes for any replaced state. Mid-task hygiene may compact stale duplicate or superseded notes, but must not remove another participant's current owned block, `Required Documentation`, or the protected `## User Comment` section.
+- During closure, limit PL context edits to its own block and final task decision. The final file-level archive compaction and `ARCHIVE` transition remain owned by `implementation-completion-reporter`.
 - Upon task completion, record the final decision, residual risks, and recommendations for next steps.
 </subagent-context-policy>
 
@@ -173,6 +179,7 @@ If no name/scope is assigned in your launch prompt, ignore this section entirely
 ### Identity
 
 - Use your assigned name (e.g., PL-Alpha) in all journal entries.
+- Use that same assigned name as your context block identity.
 - Include your name and wave number in every journal entry heading.
 
 ### Scope Boundaries

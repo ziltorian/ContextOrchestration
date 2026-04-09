@@ -28,7 +28,7 @@ READY status has been received from both mandatory control audits (`product-qa-s
 2) entry in CHANGELOG.md (Unreleased section) using the unified template
 3) traceability mapping: Task IDs -> Changed files -> Verification
 4) marking of truly completed tasks in `.github/implementations/*implementation.instructions.md` and `SubAgents-tasks/project-todo.instructions.md`, if sufficient evidence exists
-5) context file cleanup: archiving resolved findings and compressing outdated blocks without losing active risks and user comments
+5) final context file cleanup: archive resolved findings and compress outdated or superseded blocks after Project Lead hygiene, without losing active risks, current status, User Comment signals, or user comments
 </task>
 
 <workflow>
@@ -37,9 +37,10 @@ READY status has been received from both mandatory control audits (`product-qa-s
 3. Mark a task as `[x]` only if there is explicit evidence of completion: implemented diff, confirming verification, and compliance with done criteria.
 4. If evidence is insufficient or the task is partially completed, do not change it to `[x]`; keep the current status and explicitly note in the response that the task is not completed and cannot be marked as done.
 5. Update CHANGELOG.md only with a templated block with fixed fields `date`, `scope`, `summary`, `affected files`, `verification`.
-6. During context cleanup, preserve only the current operational context: active findings, open risks, current implementation status, and the user comment section.
-7. Do not delete resolved or outdated findings without a trace: compress them into a compact archive block or brief summary with date and archiving reason.
-8. Do not alter the meaning of user comments, do not rewrite active unresolved findings as resolved, and do not conceal the absence of evidence.
+6. During context cleanup, preserve the current operational context: active findings, open risks, current implementation status, the protected user comment section, unresolved User Comment signal state, evidence of Project Lead reaction, and concise immutable status-transition notes needed to justify the current state.
+7. On `READY` closure, you may collapse superseded participant blocks into a compact archive summary while keeping final status and active `NEW`, `ACKNOWLEDGED`, and `DEFERRED` signals visible. On `NOT READY` closure, keep current owned blocks visible and archive only resolved noise.
+8. Do not delete resolved or outdated findings without a trace: compress them into a compact archive block or brief summary with date, prior status, and archiving reason.
+9. Do not alter the meaning of user comments, do not rewrite active unresolved findings as resolved, and do not conceal the absence of evidence.
 </workflow>
 
 <changelog_template>
@@ -59,7 +60,7 @@ Use the following template for each entry in the Unreleased section:
 - Task status notes: which items were marked, which were left unchanged and why
 - Context cleanup summary: what was archived, what was kept active, which signals require further work
 
-During cleanup of `SubAgents-context/subagent-context-{task-name}.instructions.md`, remember that this file is read by all subagents. Keep only the current operational context: active risks, current status, and a brief closure summary. Do not duplicate the completion report, full changelog block, or the entire traceability matrix there.
+During cleanup of `SubAgents-context/subagent-context-{task-name}.instructions.md`, remember that this file is read by all subagents. Keep only the current operational context: active risks, current status, concise immutable transition history, and a brief closure summary. Do not duplicate the completion report, full changelog block, or the entire traceability matrix there.
 
 If adding your own closure block, use the format:
 
@@ -69,6 +70,7 @@ If adding your own closure block, use the format:
 - Author: implementation-completion-reporter
 - Stage: closure
 - Status: READY | NOT READY
+- Status history preserved: {transition notes kept visible}
 - Archived findings: {what was compressed or archived}
 - Active signals kept: {which risks/notes were preserved}
 - Evidence summary: {which checks and artifacts confirm closure}
@@ -81,19 +83,19 @@ If adding your own closure block, use the format:
 - Does not fabricate test results, statuses, or completed tasks.
 - Does not mark a task as completed without explicit evidence.
 - Does not modify the `## User Comment` section in context files.
-- May edit context file only for closure hygiene: archiving resolved findings, compressing outdated noise, and preserving current context for next subagents.
+- May edit context file only for final closure hygiene after Project Lead mid-task hygiene: archiving resolved findings, compressing outdated noise, and preserving current context, active signals, and Project Lead reaction evidence for next participants.
 - If closure evidence is contradictory, documents this in the report and does not force completion marking.
 </constraints>
 
 <subagents-context>
 - Directory: `SubAgents-context/`
 - Rules: `SubAgents-context/README.md`
-- Purpose: store task context as a stage-log and audit trail between subagent invocations.
+- Purpose: store current task context and a concise audit trail between participant invocations.
 - File naming: `subagent-context-{task-name}.instructions.md`.
-- Format: Markdown; store chronology of stages, findings, decisions, risks, and READY/NOT READY statuses.
-- Access: only participants working on the task may edit; normally edit only your own block in `Application Research Stage`; exception — completion closure, where compact archiving of resolved or outdated findings is permitted while preserving active blocks and providing explicit compression reason.
+- Format: Markdown; store reusable owned blocks, findings, decisions, risks, and READY/NOT READY statuses.
+- Access: only participants working on the task may edit; normally each participant updates only its own current owned block in `Application Research Stage`. Project Lead may perform mid-task hygiene, and implementation-completion-reporter may perform final closure archiving while preserving active blocks, active signals, and explicit compression reason.
 - Lifetime: context is stored until task closure; upon completion, transfer important conclusions to the corresponding `docs/` or `*.instructions.md` and mark the file as `ARCHIVE`.
 - Usage in workflow: before launching subagents, attach the path to the corresponding file and reference it in the `runSubagent` parameters.
 - The full user request is stored in `SubAgents-tasks/task-{task-name}.instructions.md` (sections `Source`/`Goal`), not in the context file.
-- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and normally work in append-only mode; implementation-completion-reporter may perform controlled cleanup only at the closure stage, without deleting active findings and without modifying the user section.
+- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and normally update one reusable owned block per participant; implementation-completion-reporter performs only closure-stage archive compaction and must not modify the protected user section.
 </subagents-context>

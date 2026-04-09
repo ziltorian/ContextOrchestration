@@ -8,6 +8,9 @@ description: "Mandatory subagent coordination workflow with READY/NOT READY stat
 ### MUST
 - Before planning or implementation, always read both artifacts: SubAgents-tasks/task-{task-name}.instructions.md and SubAgents-context/subagent-context-{task-name}.instructions.md.
 - The full user request is stored in SubAgents-tasks/task-{task-name}.instructions.md (Source/Goal). The context file stores the stage log, conclusions, risks, and audit reports.
+- Reuse one owned context block per participant: by default the block identity is the role or agent name; in parallel mode, the Project Lead identity is its assigned PL name. Repeated invocations and stage changes update the same owned block.
+- When a participant changes status or compacts superseded notes, preserve a concise dated transition note in that owned block instead of silently overwriting the latest prior state.
+- After reading the context file, inspect `## User Comment`. If it is non-empty, treat it as a signal, deduplicate repeated sightings of the same unresolved comment, surface the signal upward without rewriting the protected text, and require Project Lead acknowledgment and reaction logging.
 - Always perform preliminary research using product-qa-scenario-analyst before planning and coding.
 - After significant code changes, first execute the review-gate: `code-reviewer`. If the scope includes Python code, explicitly require a Python-specific pass within the same review in the handoff.
 - For changes in auth, API endpoints, user input, database operations, file system, or external services, add `security-reviewer` before the final dual audit.
@@ -57,7 +60,16 @@ description: "Mandatory subagent coordination workflow with READY/NOT READY stat
 - `task-creator` (Mode B): can edit SubAgents-tasks/project-todo.instructions.md only by direct user request.
 - `implementation-planning`: creates `*-implementation.instructions.md`.
 - `implementation-planning`: owner of the full planning cycle, including internal plan refinement through permitted audit subagents.
-- `implementation-completion-reporter`: creates `*-COMPLETED.instructions.md`, updates the `Unreleased` block in `CHANGELOG.md`, marks provably completed tasks in plan/todo, and can archive resolved findings in the context file.
+- `project-lead`: owns one reusable PL block in the context file, records User Comment signal state and reaction evidence, and may perform mid-task hygiene to compact stale duplicates or superseded notes without altering `Required Documentation`, the protected `## User Comment` section, or another participant's current block.
+- `implementation-completion-reporter`: creates `*-COMPLETED.instructions.md`, updates the `Unreleased` block in `CHANGELOG.md`, marks provably completed tasks in plan/todo, and owns final closure/archive compaction in the context file after Project Lead hygiene.
+
+## User Comment Signal Lifecycle
+
+- Detection: any participant that reads a non-empty `## User Comment` section must treat it as a signal and report its presence to its caller without rewriting or quoting the protected text.
+- Deduplication: if the same unresolved signal is already recorded in the participant's owned block or in the Project Lead block, update that existing note instead of creating a duplicate escalation entry.
+- Acknowledgment: Project Lead records the signal state as `ACKNOWLEDGED` in its own context block and journal after reviewing the comment and deciding the next action.
+- Deferral: if the requested reaction is intentionally postponed, Project Lead records `DEFERRED`, keeps the signal active, and records rationale plus next action without rewriting the original user text.
+- Resolution: Project Lead records `RESOLVED` only after the requested reaction is completed and the outcome is recorded. The original user text remains untouched.
 
 ## Terminal and Tests policy
 
@@ -109,7 +121,7 @@ For each subagent, `argument-hint` must include:
 
 ### Example: completion closure
 - `agentName`: `implementation-completion-reporter`
-- Prompt: "Based on approved plan + changed files + verification evidence + Current task and context `SubAgents-context/subagent-context-{task-name}.instructions.md`, generate `*COMPLETED.instructions.md`, update `CHANGELOG.md` using the template, mark only actually completed tasks in plan/todo, and archive resolved findings in the context file without losing active risks and the user comment section."
+- Prompt: "Based on approved plan + changed files + verification evidence + Current task and context `SubAgents-context/subagent-context-{task-name}.instructions.md`, generate `*COMPLETED.instructions.md`, update `CHANGELOG.md` using the template, mark only actually completed tasks in plan/todo, preserve active `NEW`, `ACKNOWLEDGED`, and `DEFERRED` User Comment signals plus Project Lead reaction evidence, and archive resolved findings in the context file without losing active risks, current status, or the user comment section."
 
 ### Example: QA scenario audit and application idea analysis
 - `agentName`: `product-qa-scenario-analyst`
@@ -150,6 +162,7 @@ Note: post-draft architect refinement is no longer launched manually by Project 
 - Before planning, verify that the task file and context file contain a `Required Documentation` section.
 - When delegating to subagents, remind them to check the `Required Documentation` section in the context file for relevant specifications.
 - Research agents may append newly discovered documentation references to the context file's `Required Documentation` section during their analysis.
+- `Required Documentation` remains the only shared section in the context file; all other participant updates must stay within owned blocks or the explicit hygiene/archive permissions.
 
 ### Documentation Creation (Optional Parallel Track)
 

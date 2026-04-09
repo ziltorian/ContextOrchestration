@@ -6,15 +6,21 @@ Directory for preserving context between subagent invocations
 
 Brief rules for using this subfolder to preserve context between subagent invocations.
 
-- Purpose: store task context as a stage-log and audit trail between subagent invocations.
+- Purpose: store current task context and a compact audit trail between participant invocations.
 - File naming: `subagent-context-{task-name}.instructions.md`.
-- Format: Markdown; store stage chronology, findings, decisions, risks, and READY/NOT READY statuses.
-- Access: only participants working on the task may edit; edit only your own block in `Application Research Stage`; when creating, specify the author and role (e.g., Project Lead / QA / Dev / User).
-- Exception for closure stage: `implementation-completion-reporter` may archive resolved findings and compress outdated blocks, provided it preserves active risks, current status, and the `## User Comment` section without changes.
+- Format: Markdown; store one reusable owned block per participant plus shared status and protected sections.
+- Access: only participants working on the task may edit. Each participant owns exactly one reusable block in `Application Research Stage`; when creating or updating it, specify the author and role (e.g., Project Lead / QA / Dev / User).
+- Stable identity for owned blocks: use the agent or role name by default (for example, `code-reviewer`); in parallel mode, each Project Lead uses its assigned name (for example, `PL-Alpha`). Stage changes and repeated invocations update metadata inside the same owned block rather than creating a new block.
+- Mutable data inside an owned block: current stage, status, key findings, active risks, decisions, references, concise archive notes for superseded details, and a concise immutable status-transition trail.
+- Traceability floor: when a block changes status or compacts superseded notes, keep a dated `Status history` or equivalent transition note instead of silently deleting the latest prior state.
+- Project Lead mid-task hygiene: Project Lead may compact stale duplicate or superseded participant material when needed to restore one current owned block per participant, provided it preserves active findings, current status, `Required Documentation`, and the `## User Comment` section, and does not remove another participant's current owned block.
+- Exception for closure stage: `implementation-completion-reporter` owns final closure/archive hygiene. On `READY`, it may archive superseded blocks into a compact closure summary and mark the file as `ARCHIVE`; on `NOT READY`, it keeps current owned blocks visible and archives only resolved noise.
 - Lifetime: context is stored until the task is closed; upon completion, transfer important conclusions to the corresponding `docs/` or `*.instructions.md` and mark the file as `ARCHIVE`.
 - Usage in workflow: before launching subagents, attach the path to the corresponding file and reference it in `runSubagent` parameters.
 - The full user request is stored in `SubAgents-tasks/task-{task-name}.instructions.md` (sections `Source`/`Goal`), not in the context file.
-- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and may only add their own scoped block in append-only format with explicit role indication (append-only: no deletion of others' active blocks); pipeline participants may only edit their own block.
+- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and update only their own current owned block, except for the explicit Project Lead hygiene and `implementation-completion-reporter` closure/archive permissions described above.
+- `## User Comment` remains user-editable only. Non-user participants may detect a non-empty comment, treat it as a signal, and surface that signal upward without rewriting or quoting the user text.
+- User Comment signal lifecycle: `NEW` when first detected, `ACKNOWLEDGED` when Project Lead records a reaction and next action, `DEFERRED` when the requested reaction is intentionally postponed and follow-up remains active, and `RESOLVED` only after Project Lead records the completed outcome. Repeated sightings of the same unresolved comment must be deduplicated by updating the existing owned block rather than adding duplicate entries.
 
 ### Required Documentation — Shared Section Exception
 
@@ -44,22 +50,28 @@ description: '{Brief task summary and current scope boundaries. Full task statem
 - [path/to/doc.md](path/to/doc.md) — description <!-- added by: agent-name, YYYY-MM-DD -->
 
 ## Application Research Stage
-<!--Your data below in append-only format. Explicit editing by SubAgents and Agents is allowed. -->
+<!--Your data below in single reusable owned blocks. Explicit editing by SubAgents and Agents is allowed only within their current block, except for permitted hygiene/archive actions. -->
+
+When a block is updated after prior runs or stage changes, keep a `- Status history:` field with dated transition notes and compaction reasons.
 
 ### Code Reviewer
 
 - Date: 2026-03-26
 - Author: code-reviewer
+- Block identity: code-reviewer
 - Stage: review-gate
 - Status: PASS/WARNING/FAIL
+- Status history: {YYYY-MM-DD prior status or compaction note, if any}
 - Brief summary by severity and scope follows
 
 ### Product QA / Scenario Analyst - post-run audit
 
 - Date: 2026-03-16
 - Author: product-qa-scenario-analyst
+- Block identity: product-qa-scenario-analyst
 - Stage: research-scenarios
 - Status: READY/NOT READY
+- Status history: {YYYY-MM-DD prior status or compaction note, if any}
 - Subagent response format follows
 
 ## Implementation Status
@@ -75,7 +87,8 @@ description: '{Brief task summary and current scope boundaries. Full task statem
 When multiple Project Leads work in parallel (launched by Program Director):
 
 - Each PL uses the same shared context file for the project-level task.
-- Each PL writes only to its own named block within the context file (e.g., `### PL-Alpha — implementation`).
+- Each PL writes only to its own reusable named block within the context file (e.g., `### PL-Alpha`).
+- The assigned PL name is the stable block identity; repeated invocations and stage transitions update that same named block, with stage stored as mutable metadata inside it.
 - Context files for parallel tasks should use commented-out `applyTo` to prevent auto-loading into all agents:
 
   ```yaml

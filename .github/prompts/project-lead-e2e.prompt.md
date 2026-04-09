@@ -98,7 +98,7 @@ Orchestrate live e2e research so that Project Lead preserves its own context: sc
     <step id="4.1">
       First launch only product-qa-scenario-analyst to analyze results of one specific test.
       It should independently check test logs, file artifacts, expected path vs actual path, and compliance with scenarios.
-      Require a brief verdict with ${input:context_file} update as an append-only block.
+      Require a brief verdict with ${input:context_file} update to the participant's existing owned block.
     </step>
     <step id="4.2">
       If product-qa-scenario-analyst returned READY, consider the post-run check sufficient and immediately proceed to the next test.
@@ -152,7 +152,7 @@ Orchestrate live e2e research so that Project Lead preserves its own context: sc
 
   <template id="postrun-factual">
     Agent: default subagent
-    Task: Use this handoff only after product-qa-scenario-analyst has already returned a problem. Investigate results of ONE test from scope ${input:test_scope}. Check test output logs, related output files, and backend health traces. Return only a brief factual summary: what appeared, what changed, what artifacts and what errors or confirmations were found. Update ${input:context_file} with append-only block. Do not provide full long logs.
+    Task: Use this handoff only after product-qa-scenario-analyst has already returned a problem. Investigate results of ONE test from scope ${input:test_scope}. Check test output logs, related output files, and backend health traces. Return only a brief factual summary: what appeared, what changed, what artifacts and what errors or confirmations were found. Update ${input:context_file} by refreshing the participant's existing owned block, or by creating that single owned block if it is missing. Do not provide full long logs.
   </template>
 
   <template id="postrun-qa">
@@ -172,5 +172,5 @@ Orchestrate live e2e research so that Project Lead preserves its own context: sc
 - Do not analyze irrelevant e2e groups outside the user-selected scope.
 - Do not skip health-check before each test.
 - Do not consider the user's rejection of a command as a guarantee that the test definitely did not start.
-- Do not overwrite others' blocks in ${input:context_file}; only append-only scoped updates.
+- Do not overwrite others' blocks in ${input:context_file}; only update your own single scoped block.
 </forbidden>

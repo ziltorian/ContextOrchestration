@@ -95,8 +95,8 @@ Modes:
 
 ### Context Files (`SubAgents-context/`)
 
-**Responsibility:** Persistent state between subagent invocations — stage logs, findings, audit results.
-**Format:** Append-only blocks with explicit role attribution.
+**Responsibility:** Persistent current-state coordination between subagent invocations — one owned block per participant plus shared and protected sections.
+**Format:** Reusable owned blocks with explicit role attribution, stable participant identity, and limited hygiene/archive exceptions.
 
 ### Implementation Plans (`.github/implementations/`)
 
@@ -107,11 +107,20 @@ Modes:
 | Mechanism | Purpose | Owner |
 | --------- | ------- | ----- |
 | `PROJECT_LEAD_JOURNAL.md` | Dual-ledger: Task Ledger + File Registry + Progress Ledger | Program Director (ledger), PLs (progress) |
-| `SubAgents-context/*.instructions.md` | Stage-log between subagent invocations | Pipeline participants (append-only) |
+| `SubAgents-context/*.instructions.md` | Current-state task coordination between invocations; one owned block per participant, plus protected/shared sections | Pipeline participants (owned blocks), Project Lead (mid-task hygiene), implementation-completion-reporter (closure archive) |
 | `SubAgents-tasks/task-*.instructions.md` | Immutable task definitions (Source/Goal) | task-creator |
 | `project-todo.instructions.md` | Global task queue visible to all agents | User, task-creator (mode B) |
 | `Required Documentation` section (in task + context files) | Curated list of documentation relevant to the task; populated at intake, extended by research agents | task-creator (initial), research agents + web-searcher (append) |
 | File Registry (in journal) | Scope ownership: file → PL mapping | Program Director |
+
+Context freshness rules at the architecture level:
+
+- Each pipeline participant owns one reusable current block per task. Stable identity is the agent or role name by default, and the assigned Project Lead name in parallel mode.
+- Repeated invocations and stage transitions update metadata inside the same owned block instead of creating new stage-specific entries.
+- `Required Documentation` remains the sole shared-section exception, while `## User Comment` remains user-editable only.
+- Non-user participants may detect a non-empty `## User Comment` and propagate only the signal upward. Project Lead must acknowledge the signal, record the reaction, and carry the state through `NEW`, `ACKNOWLEDGED`, `DEFERRED`, and `RESOLVED` without rewriting user text.
+- During an active task, Project Lead may compact stale or superseded context only to restore one current owned block per participant while preserving active findings, current implementation status, `Required Documentation`, and the protected user section.
+- At closure, `implementation-completion-reporter` owns archive handling. On `READY`, it may compress superseded context into a compact closure summary and transition the file to `ARCHIVE`; on `NOT READY`, it keeps current owned blocks visible and archives only resolved noise.
 
 ## Key Decisions
 

@@ -56,9 +56,9 @@ A coordinator agent manages the complete lifecycle from rough to-do to verified,
 ```
 project-todo.instructions.md (user-owned)
     │
-    ▼ Phase 1 — Task Expansion (Project Lead subagent)
+    ▼ Phase 1 — Task Expansion (task-creator intake)
 SubAgents-tasks/task-{name}.instructions.md         ← written once, read by all
-SubAgents-context/subagent-context-{task-name}.instructions.md  ← append-only shared log
+SubAgents-context/subagent-context-{task-name}.instructions.md  ← current-state coordination file with one owned block per participant
     │
     ▼ Phase 2 — Planning + Architecture (Planner + Architect subagents)
 .github/implementations/{name}-implementation.instructions.md
@@ -67,7 +67,7 @@ SubAgents-context/subagent-context-{task-name}.instructions.md  ← append-only 
 Production code files
     │
     ▼ Phase 4 — Verification (QA + Architect subagents)
-SubAgents-context/subagent-context-{task-name}.instructions.md  ← QA results appended
+SubAgents-context/subagent-context-{task-name}.instructions.md  ← QA and architect blocks updated in place
     │
     ▼ Phase 5 — Completion (Completion subagent)
 Docs, CHANGELOG.md, commit message
@@ -79,15 +79,16 @@ Docs, CHANGELOG.md, commit message
 
 ### Phase 1 — Task Expansion
 
-**Who:** `ProjectLead` subagent (user-invocable coordinator or dedicated subagent)  
+**Who:** `task-creator` subagent in mode A, or `ProjectLead` only when the user directly assigns a task outside `project-todo.instructions.md`  
 **Reads:** `project-todo.instructions.md`, project documentation, existing codebase  
 **Creates:**
-- `SubAgents-tasks/task-{task-name}.md` — expanded, professionally formulated task
-- `SubAgents-context/{task-name}-subagent-context.md` — shared context log (initial entry)
+
+- `SubAgents-tasks/task-{task-name}.instructions.md` — expanded, professionally formulated task
+- `SubAgents-context/subagent-context-{task-name}.instructions.md` — current-state coordination file initialized with one owned block per participant
 
 **Purpose:** Transform a short, poorly worded todo item into a precise technical task with
-full project context. The Project Lead reads the documentation and codebase before writing
-the task file — only an agent that fully understands the project context may create this file.
+full project context. The intake owner reads the documentation and codebase before writing
+the task file — only `task-creator` in standard intake, or `ProjectLead` on direct user assignment, may create this file.
 
 **Task file is immutable** — once created, it cannot be modified by any agent.
 
@@ -104,7 +105,7 @@ the task file — only an agent that fully understands the project context may c
    acceptance criteria, and file-level breakdown.
 2. `ArchitectAgent` reads the plan and enriches it: adds architectural constraints,
    references to ADRs, design patterns to follow, and files **not** to modify.
-3. Both agents append their findings to `subagent-context-{task-name}.instructions.md`.
+3. Both agents update their existing owned blocks in `subagent-context-{task-name}.instructions.md`.
 
 ---
 
@@ -117,7 +118,7 @@ the task file — only an agent that fully understands the project context may c
 
 **Rules:**
 - Follows the implementation instructions strictly.
-- Does NOT modify documentation, reports, or context files (except appending progress notes to context).
+- Does NOT modify documentation, reports, or context files outside its own owned block.
 - Uses TDD where applicable: write failing tests → implement → pass.
 
 ---
@@ -127,7 +128,7 @@ the task file — only an agent that fully understands the project context may c
 **Who:** `QASubagent` + `ArchitectAgent` subagents (parallel)  
 **Reads:** `task-{name}.instructions.md`, `subagent-context-{task-name}.instructions.md`,
 `{name}-implementation.instructions.md`, changed files  
-**Writes:** Appends results to `subagent-context-{task-name}.instructions.md`
+**Writes:** Updates each participant's owned block in `subagent-context-{task-name}.instructions.md`
 
 **QA checks:** test coverage, edge cases, regression, acceptance criteria from task file.  
 **Architect checks:** architectural consistency, pattern adherence, no unintended side effects.
@@ -155,8 +156,8 @@ On `FAILED`: coordinator halts and presents findings to user.
 | File | Creator | Can edit | Read by |
 |------|---------|----------|---------|
 | `project-todo.instructions.md` | User | User only | All agents (read-only) |
-| `SubAgents-tasks/task-{name}.instructions.md` | ProjectLead subagent (once) | **Nobody** after creation | All agents (mandatory) |
-| `SubAgents-context/subagent-context-{task-name}.instructions.md` | ProjectLead (init) | All agents (append / own-section edit) | All agents (mandatory) |
+| `SubAgents-tasks/task-{name}.instructions.md` | `task-creator` mode A, or `ProjectLead` on direct assignment | **Nobody** after creation | All agents (mandatory) |
+| `SubAgents-context/subagent-context-{task-name}.instructions.md` | `task-creator` mode A, or `ProjectLead` on direct assignment | All agents (own block only; shared/protected sections by contract) | All agents (mandatory) |
 | `.github/implementations/{name}-implementation.instructions.md` | PlannerAgent | ArchitectAgent only (enrichment pass) | All agents (mandatory) |
 | Production code | Default subagent | Default subagent only | All agents |
 | Docs / reports | Default subagent + CompletionAgent | Default + CompletionAgent | All agents |
@@ -178,16 +179,16 @@ description: >
   → verification → completion. Use when running multi-phase project work.
 tools: ['agent', 'read', 'search', 'editFiles']
 agents:
-  - ProjectLead
-  - PlannerAgent
-  - ArchitectAgent
-  - QASubagent
-  - CompletionAgent
+    - task-creator
+    - PlannerAgent
+    - ArchitectAgent
+    - QASubagent
+    - CompletionAgent
 model: Claude Sonnet 4.5 (copilot)
 ---
 You manage the full project lifecycle. For each task in project-todo.instructions.md:
 
-1. Spawn ProjectLead to research and expand the task.
+1. Spawn `task-creator` in mode A to research and expand the task, or use `ProjectLead` only when the user directly assigned the task outside `project-todo.instructions.md`.
 2. Spawn PlannerAgent to create implementation instructions.
 3. Spawn ArchitectAgent to enrich instructions with architectural context.
 4. STOP: present task file and plan to user. Await approval.
@@ -219,7 +220,7 @@ Spawn the default subagent (no agentName) with this prompt:
 
 Then implement all tasks described in the implementation instructions.
 Follow the architectural constraints in the instructions file exactly.
-After completing, append a brief progress summary to:
+After completing, update your existing owned block in:
 SubAgents-context/subagent-context-{task-name}.instructions.md"
 ```
 
