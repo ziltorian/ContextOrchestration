@@ -27,7 +27,9 @@
     ┌────┴────┬──────────┐
     ▼         ▼          ▼
 ┌────────┐┌────────┐┌────────┐
-│PL-Alpha││PL-Beta ││PL-Gamma│   (parallel Project Leads)
+│Project-││Project-││Project-│   (parallel Project Leads)
+│Lead-   ││Lead-   ││Lead-   │
+│Alpha   ││Beta    ││Gamma   │
 └───┬────┘└───┬────┘└───┬────┘
     │         │         │
     ▼         ▼         ▼
@@ -41,15 +43,17 @@
 
 ### Layer 0: Program Director (Optional)
 
-**Purpose:** Decomposes large projects into independent scopes and coordinates multiple Project Leads in iterative waves.
+**Purpose:** Decomposes large projects into independent scopes, reads docs/specs directly, delegates project/code analysis and wave verification to approved subagents, and coordinates multiple Project Leads in iterative waves.
 **File:** `.github/agents/Program-Director.agent.md`
 **Workflow:** `.github/instructions/program-director-workflow.instructions.md`
 **State:** `PROJECT_LEAD_JOURNAL.md` (Task Ledger, File Registry, Context Recovery, Progress Ledger)
 
 Key patterns:
 
-- Scope-based file partitioning (no overlapping files between PLs)
-- Wave-based iteration (2-4 PLs per wave, max 5 waves)
+- Scope-based file partitioning (no overlapping files between Project Leads)
+- Wave-based iteration (2-4 Project Leads per wave, max 5 waves)
+- True batch launch for independent scopes, with sequential fallback only for dependency-constrained work
+- Docs/spec self-study by Program Director plus delegated project/code analysis and post-wave verification via approved subagents
 - Stall detection (2 consecutive zero-progress waves → termination)
 - Structured handoff with identity, scope, and context recovery instructions
 
@@ -62,7 +66,7 @@ Key patterns:
 
 Modes:
 
-- **Single-PL mode:** Standard operation, full journal control
+- **Single-Project-Lead mode:** Standard operation, full journal control
 - **Parallel mode:** Activated by Program Director; name-scoped journal, restricted file access
 
 ### Layer 2: Specialized Subagents
@@ -76,7 +80,7 @@ Modes:
 **Responsibility:** Define agent roles, tools, workflows, and constraints.
 **Format:** `.agent.md` with YAML frontmatter + XML body sections.
 **Count:** 20 agents (1 super-orchestrator, 1 orchestrator, 18 specialists).
-**Nested orchestration:** allowed only for `task-creator`, `implementation-planning`, `integration-architect-auditor`, and `document-merger`, each with an explicit `agents` allowlist.
+**Nested orchestration:** constrained by explicit `agents` allowlists and workflow rules. Program Director may delegate only approved research, audit, closure, and Project Lead agents; deeper nested orchestration inside subagents remains limited to the repository's documented exceptions.
 
 ### Instructions (`.github/instructions/`)
 
@@ -106,12 +110,12 @@ Modes:
 
 | Mechanism | Purpose | Owner |
 | --------- | ------- | ----- |
-| `PROJECT_LEAD_JOURNAL.md` | Dual-ledger: Task Ledger + File Registry + Progress Ledger | Program Director (ledger), PLs (progress) |
+| `PROJECT_LEAD_JOURNAL.md` | Dual-ledger: Task Ledger + File Registry + Progress Ledger | Program Director (ledger), Project Leads (progress) |
 | `SubAgents-context/*.instructions.md` | Current-state task coordination between invocations; one owned block per participant, plus protected/shared sections | Pipeline participants (owned blocks), Project Lead (mid-task hygiene), implementation-completion-reporter (closure archive) |
 | `SubAgents-tasks/task-*.instructions.md` | Immutable task definitions (Source/Goal) | task-creator |
 | `project-todo.instructions.md` | Global task queue visible to all agents | User, task-creator (mode B) |
 | `Required Documentation` section (in task + context files) | Curated list of documentation relevant to the task; populated at intake, extended by research agents | task-creator (initial), research agents + web-searcher (append) |
-| File Registry (in journal) | Scope ownership: file → PL mapping | Program Director |
+| File Registry (in journal) | Scope ownership: file → Project-Lead mapping | Program Director |
 
 Context freshness rules at the architecture level:
 
@@ -128,10 +132,10 @@ Context freshness rules at the architecture level:
 | -------- | ------ | --------- |
 | Scope enforcement | Prompt-level only | Industry standard; no platform supports file locking between agents |
 | State management | File-based (journal + context) | Agents have no shared memory; files are the only persistent medium |
-| Parallel coordination | Dual-ledger journal | Enables named sections per PL, read-all / write-own pattern |
-| Stall detection | Wave progress comparison | PLs cannot signal issues mid-wave; post-wave review is the only checkpoint |
-| Max parallel PLs | 2-4 per wave | Balances throughput vs. scope-conflict risk |
-| Context recovery | 6-step protocol from journal | PLs start with clean context each wave; journal is the recovery source |
+| Parallel coordination | Dual-ledger journal | Enables named sections per Project Lead, read-all / write-own pattern |
+| Stall detection | Wave progress comparison | Project Leads cannot signal issues mid-wave; post-wave review is the only checkpoint |
+| Max parallel Project Leads | 2-4 per wave | Balances throughput vs. scope-conflict risk |
+| Context recovery | 6-step protocol from journal | Project Leads start with clean context each wave; journal is the recovery source |
 
 ## Data Flow
 
@@ -152,10 +156,11 @@ User Request → task-creator → task file + context file
 
 ```text
 User Request → Program Director reads docs + todo
+→ delegated project/code analysis
 → Scope decomposition → File Registry
-→ Wave N: launch PL-Alpha, PL-Beta, PL-Gamma (parallel)
-→ Each PL runs single-task flow within scope
-→ Post-wave review → stall detection
+→ Wave N: launch Project-Lead-Alpha, Project-Lead-Beta, Project-Lead-Gamma (parallel batch)
+→ Each Project Lead runs single-task flow within scope
+→ post-wave verification audits → stall detection / continue decision
 → If remaining: next wave with updated scopes
-→ If complete: closure report
+→ If complete: implementation-completion-reporter closure report
 ```

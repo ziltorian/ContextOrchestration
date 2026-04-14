@@ -7,8 +7,9 @@ description: "Mandatory subagent coordination workflow with READY/NOT READY stat
 
 ### MUST
 - Before planning or implementation, always read both artifacts: SubAgents-tasks/task-{task-name}.instructions.md and SubAgents-context/subagent-context-{task-name}.instructions.md.
+- When launched by Program Director in parallel mode, treat the Program Director handoff as supplemental scope metadata only. It never replaces the canonical task/context artifacts and never permits skipping intake, research, planning, review-gate, verification, or closure.
 - The full user request is stored in SubAgents-tasks/task-{task-name}.instructions.md (Source/Goal). The context file stores the stage log, conclusions, risks, and audit reports.
-- Reuse one owned context block per participant: by default the block identity is the role or agent name; in parallel mode, the Project Lead identity is its assigned PL name. Repeated invocations and stage changes update the same owned block.
+- Reuse one owned context block per participant: by default the block identity is the role or agent name; in parallel mode, the Project Lead identity is its assigned Project-Lead name. Repeated invocations and stage changes update the same owned block.
 - When a participant changes status or compacts superseded notes, preserve a concise dated transition note in that owned block instead of silently overwriting the latest prior state.
 - After reading the context file, inspect `## User Comment`. If it is non-empty, treat it as a signal, deduplicate repeated sightings of the same unresolved comment, surface the signal upward without rewriting the protected text, and require Project Lead acknowledgment and reaction logging.
 - Always perform preliminary research using product-qa-scenario-analyst before planning and coding.
@@ -23,7 +24,7 @@ description: "Mandatory subagent coordination workflow with READY/NOT READY stat
 - If QA and Architect disagree, make a decision based on the authoritative source (task + specifications + code), apply one agreed-upon fix, re-run both audits.
 
 ### FORBIDDEN
-- Starting planning/implementation without `SubAgents-tasks/task-{task-name}.instructions.md` and `SubAgents-context/subagent-context-{task-name}.instructions.md`. Exception: when launched by Program Director in parallel mode, the PD handoff prompt itself serves as the task definition if no dedicated task file exists for the assigned scope.
+- Starting planning/implementation without `SubAgents-tasks/task-{task-name}.instructions.md` and `SubAgents-context/subagent-context-{task-name}.instructions.md`. Program Director handoff text may narrow scope and wave metadata, but it never replaces the canonical task/context artifacts.
 - Closing a task without READY from both mandatory checkpoint audits.
 - Running the same set of research subagents consecutively without changing the scope.
 - Running tests in parallel by multiple subagents.
@@ -60,7 +61,7 @@ description: "Mandatory subagent coordination workflow with READY/NOT READY stat
 - `task-creator` (Mode B): can edit SubAgents-tasks/project-todo.instructions.md only by direct user request.
 - `implementation-planning`: creates `*-implementation.instructions.md`.
 - `implementation-planning`: owner of the full planning cycle, including internal plan refinement through permitted audit subagents.
-- `project-lead`: owns one reusable PL block in the context file, records User Comment signal state and reaction evidence, and may perform mid-task hygiene to compact stale duplicates or superseded notes without altering `Required Documentation`, the protected `## User Comment` section, or another participant's current block.
+- `project-lead`: owns one reusable Project-Lead block in the context file, records User Comment signal state and reaction evidence, and may perform mid-task hygiene to compact stale duplicates or superseded notes without altering `Required Documentation`, the protected `## User Comment` section, or another participant's current block.
 - `implementation-completion-reporter`: creates `*-COMPLETED.instructions.md`, updates the `Unreleased` block in `CHANGELOG.md`, marks provably completed tasks in plan/todo, and owns final closure/archive compaction in the context file after Project Lead hygiene.
 
 ## User Comment Signal Lifecycle
@@ -136,7 +137,7 @@ For each subagent, `argument-hint` must include:
 1. Intake: task-creator (if no valid task-{task-name}.instructions.md).
 2. Research: product-qa-scenario-analyst + analyze-project (optionally compliance-gap-auditor).
 3. Planning: implementation-planning.
-4. Implementation: default subagent.
+4. Implementation: default subagent or ui-ux-designer.
 5. Review gate: code-reviewer.
 6. Conditional security gate: security-reviewer for security-sensitive changes.
 7. Verification: product-qa-scenario-analyst + integration-architect-auditor.
@@ -166,20 +167,21 @@ Note: post-draft architect refinement is no longer launched manually by Project 
 
 ### Documentation Creation (Optional Parallel Track)
 
-- When a task affects a module without stable documentation in `docs/`, PL may invoke `document-merger` in its multi-stage documentation creation mode as a parallel track.
+- When a task affects a module without stable documentation in `docs/`, Project-Lead may invoke `document-merger` in its multi-stage documentation creation mode as a parallel track.
 - Documentation creation must NOT block the main implementation pipeline.
 - Entry criteria: target module has no existing stable docs, or specification template is unfilled.
-- PL controls stage transitions — each stage requires explicit PL decision to proceed.
+- Project-Lead controls stage transitions — each stage requires explicit Project-Lead decision to proceed.
 
 ## Parallel Mode Conventions
 
 These conventions apply when **Program Director** launches multiple Project Lead agents to work in parallel within the same project.
+They supplement the mandatory workflow above and do not create an alternate execution path. A Project Lead in parallel mode still performs intake, mandatory research, planning, implementation, review-gate, verification, and closure within its assigned scope.
 
 ### Identity and Naming
 
-- Each parallel Project Lead receives a unique name from Program Director (e.g., PL-Alpha, PL-Beta).
-- The PL MUST use its assigned name in all journal entries and context file updates.
-- If no name is assigned, the PL is running in single-PL mode — parallel conventions do not apply.
+- Each parallel Project Lead receives a unique name from Program Director (for example, Project-Lead-Alpha, Project-Lead-Beta).
+- The Project-Lead MUST use its assigned name in all journal entries and context file updates.
+- If no name is assigned, the Project-Lead is running in single-Project-Lead mode — parallel conventions do not apply.
 
 ### Scope Boundaries
 
@@ -191,14 +193,15 @@ These conventions apply when **Program Director** launches multiple Project Lead
 #### FORBIDDEN
 - Editing files outside your assigned scope.
 - Modifying the Task Ledger or File Registry sections of the journal (owned by Program Director).
-- Editing other PLs' sections in the Progress Ledger.
+- Editing other Project Leads' sections in the Progress Ledger.
 - Running tests in parallel with other Project Leads (test execution conflicts).
-- Creating new task files (`task-*.instructions.md`) without scope authorization — use the existing project-level task file.
+- Treating the Program Director handoff prompt as a substitute for the project-level or scope-level canonical task/context files.
+- Creating new task files (`task-*.instructions.md`) without scope authorization — use the existing project-level or scope-specific canonical task file assigned by Program Director.
 
 ### Journal Coordination
 
 - Write ONLY to your own named section in the Progress Ledger of `PROJECT_LEAD_JOURNAL.md`.
-- Read the full journal (Task Ledger, File Registry, other PLs' sections) for awareness.
+- Read the full journal (Task Ledger, File Registry, other Project Leads' sections) for awareness.
 - Use all mandatory fields in every journal entry — no freeform prose.
 - Append new entries; do not overwrite previous entries within the same wave.
 
@@ -212,15 +215,16 @@ When launched by Program Director with clean context:
 4. Find the Context Recovery section → understand current project state.
 5. Find your named section in Progress Ledger → reconstruct your prior work (if any from previous waves).
 6. Accept that context recovery may be incomplete — proceed with available information.
-7. If critical context is missing, log it as a blocker rather than guessing.
+7. Read the canonical task/context files referenced by Program Director for your scope.
+8. If critical task/context artifacts are missing, log the gap as BLOCKED and request canonical artifacts before planning or implementation.
 
 ### Scope Conflict Resolution
 
-- If two PLs need the same file, the one NOT listed in the File Registry yields.
+- If two Project Leads need the same file, the one NOT listed in the File Registry yields.
 - If neither is listed (registry error), both log it as a blocker for Program Director to resolve in the next wave.
-- Shared infrastructure files (README, CHANGELOG, project-todo) are handled by the designated PL or by Program Director between waves.
+- Shared infrastructure files (README, CHANGELOG, project-todo) are handled by the designated Project-Lead or by Program Director between waves.
 
 ### Partial Completion
 
-- If you complete your scope before other PLs finish, write a READY status to your journal section and terminate.
+- If you complete your scope before other Project Leads finish, write a READY status to your journal section and terminate.
 - If you cannot complete your scope, write a NOT READY or BLOCKED status with details for Program Director to re-assign in the next wave.

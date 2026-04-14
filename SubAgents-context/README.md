@@ -10,7 +10,7 @@ Brief rules for using this subfolder to preserve context between subagent invoca
 - File naming: `subagent-context-{task-name}.instructions.md`.
 - Format: Markdown; store one reusable owned block per participant plus shared status and protected sections.
 - Access: only participants working on the task may edit. Each participant owns exactly one reusable block in `Application Research Stage`; when creating or updating it, specify the author and role (e.g., Project Lead / QA / Dev / User).
-- Stable identity for owned blocks: use the agent or role name by default (for example, `code-reviewer`); in parallel mode, each Project Lead uses its assigned name (for example, `PL-Alpha`). Stage changes and repeated invocations update metadata inside the same owned block rather than creating a new block.
+- Stable identity for owned blocks: use the agent or role name by default (for example, `code-reviewer`); in parallel mode, each Project Lead uses its assigned name (for example, `Project-Lead-Alpha`). Stage changes and repeated invocations update metadata inside the same owned block rather than creating a new block.
 - Mutable data inside an owned block: current stage, status, key findings, active risks, decisions, references, concise archive notes for superseded details, and a concise immutable status-transition trail.
 - Traceability floor: when a block changes status or compacts superseded notes, keep a dated `Status history` or equivalent transition note instead of silently deleting the latest prior state.
 - Project Lead mid-task hygiene: Project Lead may compact stale duplicate or superseded participant material when needed to restore one current owned block per participant, provided it preserves active findings, current status, `Required Documentation`, and the `## User Comment` section, and does not remove another participant's current owned block.
@@ -86,9 +86,9 @@ When a block is updated after prior runs or stage changes, keep a `- Status hist
 
 When multiple Project Leads work in parallel (launched by Program Director):
 
-- Each PL uses the same shared context file for the project-level task.
-- Each PL writes only to its own reusable named block within the context file (e.g., `### PL-Alpha`).
-- The assigned PL name is the stable block identity; repeated invocations and stage transitions update that same named block, with stage stored as mutable metadata inside it.
+- Each Project Lead uses the same shared context file for the project-level task.
+- Each Project Lead writes only to its own reusable named block within the context file (for example, `### Project-Lead-Alpha`).
+- The assigned Project-Lead name is the stable block identity; repeated invocations and stage transitions update that same named block, with stage stored as mutable metadata inside it.
 - Context files for parallel tasks should use commented-out `applyTo` to prevent auto-loading into all agents:
 
   ```yaml

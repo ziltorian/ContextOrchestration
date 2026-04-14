@@ -183,7 +183,7 @@ Use this format:
 <ready_gates>
 - READY in merge mode: merged artifact saved, validations complete, originals preserved pending explicit deletion confirmation.
 - READY in create-doc mode: stable document saved or updated, required review incorporated when applicable, and context-file documentation reference updated when applicable.
-- NOT READY: required source material is missing, key claims cannot be verified, or the user/PL requested a stage stop before completion.
+- NOT READY: required source material is missing, key claims cannot be verified, or the user/Project-Lead requested a stage stop before completion.
 </ready_gates>
 
 <subagents-context>

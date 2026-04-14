@@ -10,7 +10,7 @@ Instead of manually coordinating AI assistants, you get a **Project Lead agent**
 
 ## Key Features
 
-- **Program Director** — Super-orchestrator that decomposes projects into independent scopes and launches multiple Project Leads in parallel waves
+- **Program Director** — Super-orchestrator that reads docs/specs directly, delegates project/code analysis and wave verification to audit subagents, and launches multiple Project Leads in parallel waves
 - **Project Lead Agent** — Central coordinator that delegates work to specialized subagents and enforces quality gates
 - **20 Agents** — Project orchestration, code review, security audit, implementation planning, UI/UX design, build error resolution, refactoring, QA scenarios, and more
 - **Structured Pipeline** — Predictable flow from task creation through dual-audit verification to completion
@@ -85,7 +85,7 @@ Task context files follow a freshness contract defined in `SubAgents-context/REA
 
 ### Multi-Agent Orchestration (via Program Director)
 
-For projects requiring parallel execution, Program Director decomposes work into independent scopes and launches multiple named Project Leads per wave:
+For projects requiring parallel execution, Program Director reads the repository docs/specs directly, delegates broader project/code analysis to research subagents, decomposes work into independent scopes, launches each wave as a single parallel batch of named Project Leads, verifies the returned work through audit subagents, and continues until success, stall, max-wave, or blocked termination:
 
 ```text
  ┌────────────────────────────────────────────────────────┐
@@ -104,7 +104,9 @@ For projects requiring parallel execution, Program Director decomposes work into
        ┌────────┘    ┌─────┘   ┌────────────┐
        ▼             ▼         ▼            │
  ┌───────────┐ ┌───────────┐ ┌───────────┐  │
- │ PL-Alpha  │ │ PL-Beta   │ │ PL-Gamma  │  │
+ │ Project-  │ │ Project-  │ │ Project-  │  │
+ │ Lead-     │ │ Lead-     │ │ Lead-     │  │
+ │ Alpha     │ │ Beta      │ │ Gamma     │  │
  │ (scope A) │ │ (scope B) │ │ (scope C) │  │
  └─────┬─────┘ └──────┬────┘ └─────┬─────┘  │
        │              │            │        │
@@ -112,12 +114,12 @@ For projects requiring parallel execution, Program Director decomposes work into
                       │                     │
                       ▼                     │
           ┌──────────────────────┐          │
-          │  Post-Wave Review    │          │
-          │  (stall detection)   │──────────┘
+          │  Wave Verification   │          │
+          │  + stall detection   │──────────┘
           └──────────────────────┘   (next wave if needed)
 ```
 
-Each Project Lead runs the full pipeline independently within its assigned scope (see below).
+Each Project Lead still runs the full base pipeline independently within its assigned scope. Parallel mode adds scope and journal constraints; it does not replace intake, research, planning, review-gate, verification, or closure.
 
 ### Full Pipeline (via Project Lead)
 
@@ -183,7 +185,7 @@ The standard flow starts with the user filling `project-todo.instructions.md` wi
 Any agent can be invoked directly without Project Lead or a pre-filled todo:
 
 ```text
- USER ──▶ @Program-Director      (orchestrate full project with parallel PLs)
+ USER ──▶ @Program-Director      (orchestrate full project with parallel Project Leads)
  USER ──▶ @code-reviewer         (review specific files)
  USER ──▶ @implementation-planning (plan a feature)
  USER ──▶ @build-error-resolver  (fix a failing build)

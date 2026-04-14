@@ -21,6 +21,7 @@ Orchestrate live e2e research so that Project Lead preserves its own context: sc
 
 <constraints>
 - This instruction supplements but does not override other workflow instructions for task/context files, handoff, and subagent management.
+- Parallel-mode scope metadata from Program Director supplements the base Project Lead workflow and never waives canonical task/context prerequisites or earlier workflow phases.
 - If the current testing policy requires delegating backend launch, health-check, or pytest to default subagent or QA subagent, maintain that order. What matters is the phase order, not the specific executor of the terminal command.
 - Do not run e2e tests in batch. One cycle = one test.
 - Do not switch to other e2e groups if the user explicitly selected only one group.

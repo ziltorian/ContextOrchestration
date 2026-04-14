@@ -17,7 +17,7 @@ When a project requires parallel execution, **Program Director** operates above 
 
 - Reads project documentation and decomposes work into independent scopes.
 - Launches 2-4 Project Lead agents in parallel, each with an assigned name and file scope.
-- Reviews wave results, detects stalls, and re-launches PLs until all tasks are complete.
+- Reviews wave results, detects stalls, and re-launches Project Leads until all tasks are complete.
 - Manages the Task Ledger and File Registry in `PROJECT_LEAD_JOURNAL.md`.
 
 Stage 0 is optional — for single-task projects, start directly at Stage 1.
@@ -62,7 +62,7 @@ If `SubAgents-tasks/task-{task-name}.instructions.md` is missing, launching plan
 
 - `SubAgents-tasks/project-todo.instructions.md`: user can always edit; `task-creator` can edit only in mode B and only by direct user request; `implementation-completion-reporter` can mark truly completed items at closure stage only with confirmed evidence.
 - `SubAgents-tasks/task-{task-name}.instructions.md`: created only by `task-creator` (mode A) or `project-lead` if user directly assigned a task bypassing project-todo.instructions.md. After Project Lead approval, the file is immutable and cannot be edited.
-- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and each participant owns one reusable current block with explicit role identification. Stable identity is the role or agent name by default and the assigned PL name in parallel mode; repeated invocations and stage changes update the same owned block. Each owned block preserves a concise immutable status-transition note when prior states or superseded details are compacted. `Required Documentation` remains the sole shared-section exception, and `## User Comment` remains user-editable only.
+- `SubAgents-context/subagent-context-{task-name}.instructions.md`: all pipeline participants read the file and each participant owns one reusable current block with explicit role identification. Stable identity is the role or agent name by default and the assigned Project-Lead name in parallel mode; repeated invocations and stage changes update the same owned block. Each owned block preserves a concise immutable status-transition note when prior states or superseded details are compacted. `Required Documentation` remains the sole shared-section exception, and `## User Comment` remains user-editable only.
 - `project-lead`: may perform mid-task context hygiene to compact stale duplicate or superseded context and restore one current owned block per participant, but must preserve active findings, current implementation status, immutable status-transition notes, `Required Documentation`, and the protected `## User Comment` section, and must not remove another participant's current owned block.
 - `implementation-completion-reporter`: owns closure-stage archiving and the final `ARCHIVE` transition. On `READY`, it may compress superseded context into a compact archive summary; on `NOT READY`, it keeps current owned blocks visible and archives only resolved noise. In both cases it preserves active signals, current status, and the protected user comment section.
 - `.github/implementations/{task-name}-implementation.instructions.md`: owner `implementation-planning`; plan refinement via audit subagents is performed when `implementation-planning` invokes its own subagents.
@@ -70,7 +70,7 @@ If `SubAgents-tasks/task-{task-name}.instructions.md` is missing, launching plan
 - `code-reviewer`, `security-reviewer`, `refactor-cleaner`: review-only/report-only participants; they do not modify production code.
 - For Python scope, `code-reviewer` combines general review and Python-specific pass.
 - `build-error-resolver`: allowed only for minimal fix of a blocking error within the already approved scope; does not modify tests to match implementation and does not expand the task.
-- `Required Documentation` section in task file: `task-creator` writes during creation; `web-searcher` may append only `docs/web/` artifact references and only before PL approval; immutable after PL approval (same rule as the full task file).
+- `Required Documentation` section in task file: `task-creator` writes during creation; `web-searcher` may append only `docs/web/` artifact references and only before Project-Lead approval; immutable after Project-Lead approval (same rule as the full task file).
 - `## User Comment` handling: non-user participants may only detect and escalate the signal outside the protected section; they never rewrite user-entered text. Deferred signals remain active as `DEFERRED`; only completed Project Lead reactions may be marked `RESOLVED`.
 - Documentation and completion artifacts: produced at implementation and closure stages by specialized agents.
 
@@ -109,7 +109,7 @@ description: '{Brief contextual summary of the task and current scope boundaries
 - {Constraints: security, tests, format, architectural restrictions}
 
 ## Required Documentation
-<!-- Populated by task-creator during intake. web-searcher may append docs/web/ references before PL approval. Immutable after PL approval (same as the rest of the task file). -->
+<!-- Populated by task-creator during intake. web-searcher may append docs/web/ references before Project-Lead approval. Immutable after Project-Lead approval (same as the rest of the task file). -->
 
 - [path/to/doc.md](path/to/doc.md) — description <!-- added by: agent-name, YYYY-MM-DD -->
 

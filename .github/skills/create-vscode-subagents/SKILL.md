@@ -31,7 +31,7 @@ Create `.agent.md` files for GitHub Copilot in VS Code — from simple specializ
 
 **Coordinator** — an agent that uses the `agent` tool to delegate tasks. It routes, it does not implement.
 
-**Worker** — an agent that does specialized work (research, coding, review) and returns a structured result. Workers can also spawn their own subagents.
+**Worker** — an agent that does specialized work (research, coding, review) and returns a structured result. Workers can spawn their own subagents only when the repository workflow and the agent allowlist explicitly permit it.
 
 **Nested Subagent** — a worker agent that itself invokes sub-workers. Enables multi-level orchestration hierarchies (Coordinator → Worker → Sub-worker).
 
@@ -191,9 +191,11 @@ code → confirm passing tests. Return a summary of changes made.
 
 Worker agents can now call their own subagents, enabling deep orchestration hierarchies. This is the key new capability introduced in VS Code 1.109+.
 
+Repository caveat for Context Orchestration: platform capability does not override repository-specific orchestration contracts. In this repository, nested delegation is constrained by each agent's `agents` allowlist plus the workflow instructions. Program Director is limited to approved research, audit, closure, and Project Lead delegation; Project Lead remains the delivery orchestrator inside each assigned scope.
+
 ### How It Works
 
-Any agent with `agent` in its `tools` list can invoke subagents — including agents that are themselves running as subagents. The nesting depth is theoretically unlimited.
+Any agent with `agent` in its `tools` list can invoke subagents — including agents that are themselves running as subagents. Platform nesting depth is flexible, but real projects should cap it with explicit allowlists, role boundaries, and termination rules.
 
 ```
 User → Coordinator
@@ -441,7 +443,7 @@ for full details, YAML examples, and the awesome-copilot agent catalog.
 project-todo.instructions.md  (user-owned backlog; only task-creator mode B and implementation-completion-reporter have limited edit rights)
        │
        ▼  Phase 1 — Task Expansion
-SubAgents-tasks/task-{task-name}.instructions.md   ← created by task-creator mode A, or by Project Lead on direct assignment; immutable after PL approval
+SubAgents-tasks/task-{task-name}.instructions.md   ← created by task-creator mode A, or by Project Lead on direct assignment; immutable after Project-Lead approval
 SubAgents-context/subagent-context-{task-name}.instructions.md   ← current shared context with one owned block per participant
        │
        ▼  Phase 2 — Planning + Architecture

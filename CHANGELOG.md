@@ -1,7 +1,7 @@
 # Changelog
 
 **Document version:** 0.2
-**Date updated:** 2026-04-09
+**Date updated:** 2026-04-10
 **Status:** Active
 **meta:** All notable changes to this project are documented in this file.
 
@@ -10,7 +10,12 @@ versioning follows the internal development plan [Master Plan](.github/implement
 
 ---
 
-## [0.2.0] - 2026-04-09
+## [0.2.0] - 2026-04-10
+
+### 2026-04-10 - Program-Director / Project-Lead Orchestration Loop Hardening
+
+- Scope: Program-Director / Project-Lead orchestration loop hardening
+- Summary: Hardened the Program-Director and Project-Lead orchestration contract so parallel mode is additive only, independent scopes launch as true parallel batches, Program-Director reads repository docs/specs directly while delegating broader project/code analysis and post-wave verification to approved subagents, and closure/verification semantics remain aligned across instructions, agents, prompts, skills, canonical pipeline docs, and public mirrors.
 
 ### 2026-04-09 - Context File Freshness
 
@@ -38,4 +43,4 @@ versioning follows the internal development plan [Master Plan](.github/implement
 - Scope: Multi-agent orchestration system (Program Director)
 - Summary: Added Program Director super-orchestrator agent that decomposes projects into independent scopes and launches multiple Project Leads in parallel waves. Redesigned PROJECT_LEAD_JOURNAL.md as a dual-ledger (Task Ledger + File Registry + Context Recovery + Progress Ledger). Updated Project Lead with parallel mode support (identity, scope boundaries, context recovery, journal protocol). Created program-director-workflow instructions, and updated all pipeline documentation.
 - Affected files: .github/agents/Program-Director.agent.md, .github/agents/Project-Lead.agent.md, .github/instructions/program-director-workflow.instructions.md, .github/instructions/project-lead-workflow.instructions.md, .github/prompts/program-director-e2e.prompt.md, .github/prompts/project-lead-e2e.prompt.md, PROJECT_LEAD_JOURNAL.md, SubAgents-tasks/README.md, SubAgents-context/README.md, docs/architecture/overview.md, README.md
-- Verification: Structural review of all created/modified files, cross-reference consistency between PD agent, PL agent, journal template, and workflow instructions
+- Verification: Structural review of all created/modified files, cross-reference consistency between Program-Director agent, Project-Lead agent, journal template, and workflow instructions
